@@ -640,3 +640,48 @@ zensical serve
 **When to migrate:** Watch for the module system public release and mkdocstrings parity in Zensical. At that point the switch is a one-line change to your build command. The `mkdocs.yml` config, all Markdown content, and the Cloudflare Pages deploy pipeline remain identical.
 
 _References: [Zensical](https://zensical.org/) · [Compatibility](https://zensical.org/compatibility/) · [Roadmap](https://zensical.org/about/roadmap/) · [mkdocstrings](https://mkdocstrings.github.io/) · [Cloudflare Tunnel Docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)_
+
+---
+
+## Config File Tracking (Git-Backed Symlinks)
+
+Several system config files created during this guide are tracked in the repo under `configs/` and symlinked from their original `/etc/` paths. Editing the repo file is sufficient - no need to touch `/etc/` directly.
+
+| Repo path | System path |
+| --- | --- |
+| `configs/cloudflared/config.yml` | `/etc/cloudflared/config.yml` |
+| `configs/nginx/hub` | `/etc/nginx/sites-available/hub` |
+| `configs/sysctl/99-hardening.conf` | `/etc/sysctl.d/99-hardening.conf` |
+
+> **Not tracked:** `/etc/cloudflared/<UUID>.json` (tunnel credentials) - this file is a secret and must never be committed to git.
+
+### Editing a config
+
+Edit the file in the repo, validate, then restart the service:
+
+```bash
+# example: update cloudflare tunnel ingress rules
+nano configs/cloudflared/config.yml
+sudo cloudflared tunnel ingress validate
+sudo systemctl restart cloudflared
+git add configs/cloudflared/config.yml && git commit -m "update tunnel ingress"
+```
+
+For nginx:
+
+```bash
+nano configs/nginx/hub
+sudo nginx -t
+sudo systemctl restart nginx
+git add configs/nginx/hub && git commit -m "update nginx hub config"
+```
+
+### Re-creating symlinks (after cloning or moving the repo)
+
+If the repo is cloned fresh or moved, re-run the setup script:
+
+```bash
+sudo bash scripts/setup-symlinks.sh
+```
+
+This script resolves the repo root from its own path, recreates all three symlinks, and validates each service config.

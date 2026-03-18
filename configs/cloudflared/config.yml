@@ -1,0 +1,15 @@
+tunnel: 68aa8138-1812-446c-9faf-3760c42058d4
+credentials-file: /etc/cloudflared/68aa8138-1812-446c-9faf-3760c42058d4.json
+
+ingress:
+  # home page
+  - hostname: pitrified.qzz.io
+    service: http://localhost:8090
+  - hostname: entries.pitrified.qzz.io
+    service: http://localhost:8000
+  # ssh
+  - hostname: ssh.pitrified.qzz.io
+    service: ssh://localhost:22
+  # Catch-all (Required)
+  - service: http_status:404
+
