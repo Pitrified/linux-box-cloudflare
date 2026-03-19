@@ -34,7 +34,7 @@ _(This automatically enables ESM infrastructure and application updates.)_
 
 **3. Secure SSH Access**
 
-Ensure you have copied your public SSH key to the server before doing this step — once password auth is disabled, a key is the only way in.
+Ensure you have copied your public SSH key to the server before doing this step - once password auth is disabled, a key is the only way in.
 
 ```bash
 ssh-copy-id user@host
@@ -70,7 +70,7 @@ sudo systemctl restart ssh
 
 **4. Configure Firewall (UFW)**
 
-Since Cloudflare Tunnels establish an _outbound_ connection, no inbound ports need to be opened for web traffic. The only inbound rule needed at this stage is SSH — and even that goes away in Phase 6.
+Since Cloudflare Tunnels establish an _outbound_ connection, no inbound ports need to be opened for web traffic. The only inbound rule needed at this stage is SSH - and even that goes away in Phase 6.
 
 ```bash
 sudo apt install ufw -y
@@ -144,7 +144,7 @@ sudo fail2ban-client status sshd
 - Create a free account at [Cloudflare](https://dash.cloudflare.com/).
 - Click **Add a Site** and enter your domain.
 - Select the **Free** tier.
-- Cloudflare will scan for existing DNS records. For a brand new domain this will return **0 records — this is expected and correct**. There is nothing to import. Click through.
+- Cloudflare will scan for existing DNS records. For a brand new domain this will return **0 records - this is expected and correct**. There is nothing to import. Click through.
 - Cloudflare will provide two nameservers (e.g., `xxx.ns.cloudflare.com`).
 
 **3. Update Nameservers at Your Registrar**
@@ -163,7 +163,7 @@ Apply these settings in the Cloudflare dashboard once DNS is live. These harden 
 - **SSL/TLS → Edge Certificates** → Set minimum TLS version to **TLS 1.2**.
 - **SSL/TLS → Edge Certificates → HSTS** → _Enable only after confirming HTTPS works end-to-end_ (i.e., after Phase 4 is complete and a subdomain loads correctly in a browser without errors). HSTS tells browsers to never use HTTP, and enabling it prematurely on a misconfigured site can lock you out.
 - **Security → Settings** → Enable **Bot Fight Mode** to block automated scanners at the edge.
-- **Security → WAF** → Enable the **Cloudflare Managed Ruleset**. This is available on the free tier and provides a baseline web application firewall at zero cost. If the WAF page is not visible, look under **Security → Overview** for a "Managed rules" card, or under **Security → Application Security** — the nav label varies by account.
+- **Security → WAF** → Enable the **Cloudflare Managed Ruleset**. This is available on the free tier and provides a baseline web application firewall at zero cost. If the WAF page is not visible, look under **Security → Overview** for a "Managed rules" card, or under **Security → Application Security** - the nav label varies by account.
 - **Notifications** → Set up alerts for tunnel health and unusual traffic spikes.
 
 ---
@@ -222,7 +222,7 @@ sudo nginx -t          # verify config syntax before restarting
 sudo systemctl restart nginx
 ```
 
-Quick local test — should return your HTML:
+Quick local test - should return your HTML:
 
 ```bash
 curl http://localhost:8090
@@ -232,7 +232,7 @@ curl http://localhost:8090
 
 ## Phase 4: Multiple Apps via Cloudflare Tunnel
 
-All traffic — the landing page, apps, and the bot — is routed through a single Cloudflare Tunnel. The tunnel makes an outbound connection from your box to Cloudflare's edge; no inbound ports are needed.
+All traffic - the landing page, apps, and the bot - is routed through a single Cloudflare Tunnel. The tunnel makes an outbound connection from your box to Cloudflare's edge; no inbound ports are needed.
 
 **1. Install `cloudflared`**
 
@@ -252,7 +252,7 @@ cloudflared tunnel login
 cloudflared tunnel create my-server
 ```
 
-This generates a JSON credentials file in `~/.cloudflared/` named after the tunnel's UUID. **Copy the UUID** — you need it for the config file.
+This generates a JSON credentials file in `~/.cloudflared/` named after the tunnel's UUID. **Copy the UUID** - you need it for the config file.
 
 **3. Secure the Credentials File**
 
@@ -279,7 +279,7 @@ tunnel: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 credentials-file: /etc/cloudflared/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.json
 
 ingress:
-  # Root domain — landing page served by nginx
+  # Root domain - landing page served by nginx
   - hostname: pitrified.qzz.io
     service: http://localhost:8090
 
@@ -295,7 +295,7 @@ ingress:
   - hostname: bot.pitrified.qzz.io
     service: http://localhost:5000
 
-  # Catch-all (required — must be last)
+  # Catch-all (required - must be last)
   - service: http_status:404
 ```
 
@@ -309,7 +309,7 @@ cloudflared tunnel route dns my-server app2.pitrified.qzz.io
 cloudflared tunnel route dns my-server bot.pitrified.qzz.io
 ```
 
-Before installing the service, copy the config to `/etc/cloudflared/`. The `sudo cloudflared service install` command runs as root, so `~` expands to `/root/` — it will not find files in your home directory.
+Before installing the service, copy the config to `/etc/cloudflared/`. The `sudo cloudflared service install` command runs as root, so `~` expands to `/root/` - it will not find files in your home directory.
 
 ```bash
 sudo mkdir -p /etc/cloudflared
@@ -329,7 +329,7 @@ sudo systemctl start cloudflared
 
 Open `https://pitrified.qzz.io` in a browser. Seeing the landing page confirms the full stack is working: tunnel, Cloudflare DNS, edge TLS, and local nginx are all connected.
 
-Once this works, go back to the Cloudflare dashboard and enable **HSTS** (see Phase 2, step 4) — HTTPS is now confirmed working.
+Once this works, go back to the Cloudflare dashboard and enable **HSTS** (see Phase 2, step 4) - HTTPS is now confirmed working.
 
 _Reference: [Cloudflare Tunnel Documentation](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)_
 
@@ -355,7 +355,7 @@ Protect your applications so only authorised users can access them. Zero Trust A
 
 **2. Also Protect the Root Domain**
 
-The wildcard `*.pitrified.qzz.io` matches subdomains only — it does **not** cover the root domain `pitrified.qzz.io` itself. The landing page will be publicly accessible unless you explicitly add the root domain to the same Access application.
+The wildcard `*.pitrified.qzz.io` matches subdomains only - it does **not** cover the root domain `pitrified.qzz.io` itself. The landing page will be publicly accessible unless you explicitly add the root domain to the same Access application.
 
 In the Access application configuration, click **Add domain** and add `pitrified.qzz.io` (no wildcard) alongside the existing `*.pitrified.qzz.io` entry. The same policy applies to both. After saving, visiting the root domain will also trigger the Google auth challenge.
 
@@ -363,13 +363,13 @@ Whether to protect the root domain is a choice: leaving it public makes the land
 
 **3. Optional: Device Posture Checks**
 
-Under **Settings → WARP Client**, you can require device-level conditions before access is granted — such as minimum OS version or disk encryption being enabled. Useful if multiple people access your apps from personal devices.
+Under **Settings → WARP Client**, you can require device-level conditions before access is granted - such as minimum OS version or disk encryption being enabled. Useful if multiple people access your apps from personal devices.
 
 ---
 
 ## Phase 6: Secure SSH from Anywhere (via Tunnel)
 
-The most secure approach to remote SSH is to route it through the existing Cloudflare Tunnel rather than exposing port 22 to the internet. Combined with the Zero Trust Access policy, this means SSH requires both a valid private key **and** a Google authentication challenge — with no open inbound ports on the box.
+The most secure approach to remote SSH is to route it through the existing Cloudflare Tunnel rather than exposing port 22 to the internet. Combined with the Zero Trust Access policy, this means SSH requires both a valid private key **and** a Google authentication challenge - with no open inbound ports on the box.
 
 **1. Add SSH to the Tunnel Ingress**
 
@@ -394,7 +394,7 @@ sudo systemctl restart cloudflared
 
 **2. Remove the UFW SSH Exception**
 
-SSH no longer arrives as a direct inbound connection. Remove the last remaining inbound firewall rule — the box now has zero open inbound ports:
+SSH no longer arrives as a direct inbound connection. Remove the last remaining inbound firewall rule - the box now has zero open inbound ports:
 
 ```bash
 sudo ufw delete allow ssh
@@ -426,7 +426,7 @@ Then simply: `ssh ssh.pitrified.qzz.io`
 
 ## Phase 7: Telegram Bot Integration (Webhook Bypass)
 
-Telegram's servers need to reach the bot's webhook endpoint directly. Because they cannot pass the Google Auth screen, a specific bypass rule is required for that path only. This is a surgical bypass — only the exact webhook URL is exempted, not the whole subdomain.
+Telegram's servers need to reach the bot's webhook endpoint directly. Because they cannot pass the Google Auth screen, a specific bypass rule is required for that path only. This is a surgical bypass - only the exact webhook URL is exempted, not the whole subdomain.
 
 **1. Create the Bypass Policy**
 
@@ -439,7 +439,7 @@ Telegram's servers need to reach the bot's webhook endpoint directly. Because th
 
 3. **Policy Configuration:**
    - Policy Name: `Telegram IP Bypass`
-   - Action: **Bypass** — _critical: do not select Allow_
+   - Action: **Bypass** - _critical: do not select Allow_
    - Include: `IP Ranges`. Enter the official Telegram subnets:
      - `149.154.160.0/20`
      - `91.108.4.0/22`
@@ -560,7 +560,7 @@ npm install -g wrangler
 wrangler pages deploy ./site --project-name=my-landing-page
 ```
 
-> **Pages vs Workers:** When creating a new application in the Cloudflare dashboard, always choose the **Pages** tab for static sites. The `npx wrangler deploy` command and the "Path to your worker" field belong to **Workers** (serverless functions) — a completely different product. For a static site served from a Git repo, use Pages → Connect to Git, set the build output directory to `site`, and leave the build command empty.
+> **Pages vs Workers:** When creating a new application in the Cloudflare dashboard, always choose the **Pages** tab for static sites. The `npx wrangler deploy` command and the "Path to your worker" field belong to **Workers** (serverless functions) - a completely different product. For a static site served from a Git repo, use Pages → Connect to Git, set the build output directory to `site`, and leave the build command empty.
 
 ---
 
@@ -621,10 +621,10 @@ Zensical is a next-generation static site generator built by the Material for Mk
 
 **Current state (early 2026):**
 
-- Reads your existing `mkdocs.yml` natively — no config changes required to try it.
+- Reads your existing `mkdocs.yml` natively - no config changes required to try it.
 - Markdown content, template overrides, custom CSS and JS are all compatible without modification.
 - Incremental (serve-mode) builds are already 4–5× faster than MkDocs.
-- The module system — required for third-party extensibility including API docs — is in development and initially gated to Zensical Spark (paid tier) members.
+- The module system - required for third-party extensibility including API docs - is in development and initially gated to Zensical Spark (paid tier) members.
 - Full Python API documentation support (the mkdocstrings author has joined the team) is on the roadmap but not yet shipped.
 
 **Migration when ready:**
@@ -632,7 +632,7 @@ Zensical is a next-generation static site generator built by the Material for Mk
 ```bash
 pip install zensical
 
-# Drop-in replacement — no changes to mkdocs.yml needed
+# Drop-in replacement - no changes to mkdocs.yml needed
 zensical build
 zensical serve
 ```
