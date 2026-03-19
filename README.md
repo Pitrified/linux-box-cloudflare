@@ -57,6 +57,11 @@ frontend. Target canonical recipe service.
 **`cookbook`** - Personal static recipe site in Italian. Jekyll + GitHub Pages.
 Live at `pitrified.github.io/cookbook`.
 
+**`recipe-model`** _(planned)_ - Recipe data model and validation library.
+Pydantic models for recipes, ingredients, and related entities.
+Exposes a vector embedding function for recipe search,
+and a configurable parser for extracting structured recipes from unstructured text.
+
 ---
 
 ## Language Learning
@@ -99,12 +104,15 @@ for touchless fractal zoom demos.
 **`abyss`** - 3D viewer geometry: given a viewer position and a screen position,
 compute and render what the viewer sees on the screen.
 
+**`pose-tools`** _(planned)_ - Installable library for pose tracking and analysis. Provides
+common utilities for working with pose data, including MediaPipe integration, homography utilities.
+
 ---
 
-## Planned (Phase 1)
+## Planned
 
 **`social-media-downloader`** _(planned)_ - Micro-service to download media and
-extract metadata from social URLs (Instagram, YouTube, etc.). Clean boundary:
+extract metadata from social URLs (Instagram, YouTube, WebPages etc.). Clean boundary:
 input is a URL, output is a structured `DownloadedMedia` object. Used by
 `recipamatic` and `tg-central-hub-bot`.
 
