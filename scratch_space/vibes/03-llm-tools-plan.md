@@ -77,9 +77,14 @@ class StructuredLLMChain[InputT: BaseModelKwargs, OutputT: BaseModel]:
 InputT must extend `BaseModelKwargs` (field names are prompt variables).
 OutputT is a plain Pydantic `BaseModel` (schema enforced by `with_structured_output`).
 
-UPDATE: we could decouple the prompt from the structured output,
-and make `StructuredLLMChain` a standard runnable, typed (not a chain)
-Then we have another chain that does the minimal prompt+LLM call.
+> **Architecture note - composable runnables (tracked in Roadmap Phase 2):**
+> The current design tightly couples prompt + LLM + structured output into one dataclass.
+> A cleaner long-term split:
+> - `LLMRunnable[InputT]` - a typed LCEL runnable accepting `InputT`, returning a raw `AIMessage`
+>   (prompt + chat model only; no structured output). Supports streaming and free-text tasks.
+> - `StructuredChain[InputT, OutputT]` - composes `LLMRunnable` with `.with_structured_output(OutputT)`.
+> This decoupling lets consumers reuse the prompt+model layer across task types without duplicating
+> config wiring, and makes `stream()` / `astream()` a natural addition to `LLMRunnable` in Phase 3.
 
 **Prompt management** - versioned Jinja2 files:
 
@@ -99,7 +104,19 @@ highest `vN.jinja` and returns the template string. One-time in-memory cache.
 - `EntityStore` facade: accepts `Vectorable` entities, calls `to_document()` /
   `from_document()`. Filter-aware `search_typed()`.
 
-UPDATE: Chroma is just one implementation of the vector store; the library should be designed to allow other providers (Pinecone, Weaviate, etc.) via the same config → wrapper → facade pattern.
+> **Design note - multi-provider extensibility:** Chroma is the only v1 implementation, but the
+> three-layer pattern (`VectorStoreConfig` → provider wrapper → `EntityStore`) is explicitly
+> designed for additional backends. Adding Pinecone or Weaviate requires:
+> 1. A new `PineconeConfig(VectorStoreConfig)` in `vectorstores/config/pinecone.py`.
+> 2. A thin wrapper (if deduplication or retry logic is needed) in `vectorstores/cpinecone.py`.
+> 3. `EntityStore` stays unchanged - it depends only on the `add_documents` / `similarity_search`
+>    interface, not on the concrete backend.
+>
+> Gate each backend behind its own optional dependency group:
+> `pinecone = ["langchain-pinecone>=0.1", "pinecone-client>=3.0"]`
+>
+> **Known v1 limitation:** consumers needing a non-Chroma backend must wait for v2, contrib a
+> new config module, or wrap their backend manually and pass it to `EntityStore` directly.
 
 **`to_prompt()` convention** - every domain object that feeds an LLM context
 exposes a `to_prompt() -> str` method. Chains call `entity.to_prompt()` to
@@ -354,12 +371,16 @@ pattern visible in laife's action processing.
 elapsed=...)` already exists in laife; standardise as a shared decorator /
 context manager so all chain invocations emit the same log schema.
 
+**Usage metrics** - Add callbacks to count tokens, calls, errors per model. Emit
+*structured metrics to a monitoring backend (e.g. Prometheus).
+
 **LangSmith / OpenTelemetry integration** - optional tracing backend;
 gated by a `LANGCHAIN_TRACING_V2` env var so it is zero-cost when disabled.
 
 **Retry and rate limiting middleware** - configurable retry with exponential
 backoff (wraps `invoke`/`ainvoke`); per-model concurrency limits for Ollama
-and HuggingFace local models.
+and HuggingFace local models. LangChain provides a minimal rate limiter,
+we need to build a more robust one that counts tokens.
 
 **Prompt caching** - extend `PromptLoader` to hash template content;
 optionally pass through OpenAI prompt caching headers.
@@ -374,7 +395,17 @@ in unit tests.
 pairs, run the chain, compute field-level accuracy, and surface a structured
 report. Integrates with the `PromptLoader` versioning scheme.
 
-UPDATE: langgraph + reasoning agent
+**LangGraph + reasoning agent** - upgrade the `ReActAgent` from Phase 4 to a full
+LangGraph state machine with typed, inspectable intermediate steps:
+
+- Nodes: `PlannerNode → ToolCallNode → ObservationNode → ReflectionNode → TerminalNode`.
+- All edges gated by a typed `AgentState(BaseModel)` that accumulates the reasoning trace.
+- The typed-state approach maps cleanly onto the `BaseModelKwargs` pattern and makes each
+  reasoning step available to the `ChainEval` harness above.
+- `ReflectionNode` cross-links to the eval harness: it can score its own output against
+  expected ground truth and trigger re-planning before emitting a final answer.
+- laife's `PlayerBrain` / `Mission` / `WorldRunner` remain the design prototype; the LangGraph
+  version generalises the pattern beyond the game domain.
 
 ---
 
@@ -402,6 +433,182 @@ Projects that only use OpenAI + Chroma pay no cost for Ollama / HuggingFace
 wheels. laife would use `llm-tools[all]`; recipamatic / convo-craft would use
 `llm-tools[openai]`.
 
+### Local development vs CI install
+
+One source of truth: the consumer's `pyproject.toml` always declares `llm-tools` via a
+git-tag pin. Local development overrides the resolved package with a `Makefile` target;
+`pyproject.toml` itself never changes between environments.
+
+**Consumer `pyproject.toml` (permanent, committed):**
+
+```toml
+[project]
+dependencies = [
+    "llm-tools[openai] @ git+https://github.com/<org>/llm-tools@v0.1.0",
+]
+```
+
+Tag every `llm-tools` release (`v0.1.0`, `v0.2.0`, ...). Consumers update their
+pin explicitly on each upgrade by editing the `@vX.Y.Z` suffix and re-locking.
+
+**Per-consumer `Makefile` target for local development (copy-paste template):**
+
+```makefile
+LLM_TOOLS_PATH ?= ../llm-tools
+
+.PHONY: dev-llm-tools
+dev-llm-tools:  ## Swap llm-tools to a local editable install for development
+	uv pip install -e "$(LLM_TOOLS_PATH)[all]"
+	@echo "llm-tools is now installed from $(LLM_TOOLS_PATH)"
+	@echo "Run 'uv sync' to revert to the pinned git version."
+```
+
+Usage:
+
+```bash
+# From inside the consumer project directory:
+make dev-llm-tools                      # uses ../llm-tools
+make dev-llm-tools LLM_TOOLS_PATH=~/dev/llm-tools  # custom path
+```
+
+Running `uv sync` in the consumer at any time reverts to the pinned git version.
+The `uv.lock` file always reflects the git pin; the local editable overlay is
+never committed.
+
+**Pitfalls:**
+
+- The editable pip overlay is invisible to `uv lock`. If you run `uv sync` after
+  `make dev-llm-tools`, the local install is silently reverted. Add a guard comment
+  in the `Makefile` and document in the project `README`.
+- Version skew: a breaking change to `BaseModelKwargs` or `StructuredLLMChain` requires
+  coordinated updates across all consumers. Mitigate by keeping public `__all__` stable and
+  deprecating symbols before removing them (at least one release cycle).
+- Developers who forget to run `make dev-llm-tools` after a fresh clone will pick up the
+  git-pinned version and may miss local changes - make this the first step in the project
+  `CONTRIBUTING.md`.
+
+---
+
+## Sanity Check - Pitfalls and Risks
+
+### 1. Version fragmentation across consumers
+
+Different repos will inevitably pin different versions of `llm-tools`. A bug
+fix or new provider in v0.3 means nothing to a consumer still on v0.1. There
+is no automatic propagation signal. Mitigations:
+
+- Maintain a `CHANGELOG.md` with explicit "consumers must update X" callouts.
+- Add a `llm-tools --check-version` CLI entry point that consumers can call in
+  their CI to detect stale pins.
+- Consider a [Renovate](https://docs.renovatebot.com/) bot config in each consumer
+  repo to auto-create PRs on new `llm-tools` git tags.
+
+### 2. Consumer need to extend library classes
+
+A consumer may need a provider not yet in `llm-tools` (e.g. Anthropic, Groq,
+Bedrock) or a custom `ChatConfig` subclass with project-specific defaults.
+The plan must document the extension contract:
+
+- **Subclassing is the supported path** for new providers: subclass `ChatConfig` /
+  `EmbeddingsConfig` / `VectorStoreConfig` in the consumer project. No fork needed.
+- If a consumer-defined subclass is generally useful, they open a PR to upstream it.
+- `StructuredLLMChain` accepts `chat_config: ChatConfig` - the type annotation is the
+  base class, so any subclass works without changes.
+- Risk: if the library uses `isinstance(config, ChatOpenAIConfig)` anywhere instead of
+  duck typing, consumer subclasses will break. Enforce duck typing + `to_kw()` throughout.
+
+### 3. `BaseModelKwargs` ownership and duplication
+
+`python-project-template` already ships its own `BaseModelKwargs`. If `llm-tools`
+ships a second copy, projects that depend on both get two incompatible base classes.
+Options (pick one, commit early):
+
+- **Extract to a separate micro-library** (`python-tools` or `base-models`) and have
+  both `llm-tools` and `python-project-template` depend on it. Clean but adds a
+  third repo to coordinate.
+- **Duplicate and document** - both copies are identical at v1; accept the debt and
+  unify later. Simpler short-term, painful when they diverge.
+- **Make `llm-tools` a hard dependency of `python-project-template`** - only feasible
+  if every project that uses the template also wants LLM features.
+
+### 4. LangChain version drift and resolver conflicts
+
+LangChain's own ecosystem (`langchain-core`, `langchain-openai`, etc.) releases
+frequently and sometimes breaks backwards compatibility. If `llm-tools` pins
+`langchain-core>=0.3` and a consumer also depends directly on LangChain and pins
+tightly, `uv`'s resolver will see conflicting requirements. Mitigations:
+
+- Use wide lower-bound pins in `llm-tools` (`>=X.Y`) with no upper bound; let
+  consumers tighten if needed. Never pin exact versions in a library.
+- Add a `langchain-compat` CI job in `llm-tools` that tests against the current
+  LangChain release weekly, not just on PRs.
+
+### 5. `StructuredLLMChain` constructs a live model at `__post_init__`
+
+Every instantiation creates a real LLM client and potentially an API connection.
+This makes testing expensive and slow, and makes it impossible to create a chain
+object "speculatively" for configuration purposes. Mitigations:
+
+- Add a `lazy: bool = False` flag; when `True`, defer `create_chat_model()` to
+  the first `invoke` call.
+- Ship `FakeChatModel` in `llm_tools.testing` from v1, not Phase 6. Without it,
+  every consumer that tries to unit-test a chain must mock the model themselves,
+  diverging in incompatible ways.
+
+### 6. Prompt variable validation is one-sided
+
+The current validation catches fields in `InputT` that are missing from the prompt
+template. It does NOT catch the reverse: template variables with no corresponding
+`InputT` field. Those fail at `invoke` time, not at construction. Add a symmetric
+check:
+
+```python
+extra = frozenset(self.prompt_template.input_variables) - frozenset(self.input_model.model_fields)
+if extra:
+    raise ExtraPromptVariablesError(extra)
+```
+
+### 7. `Vectorable` is informally enforced
+
+`@runtime_checkable` protocols can only verify method existence, not signatures.
+A class can pass `isinstance(obj, Vectorable)` even if its `to_document()` returns
+the wrong type. This will surface only at `EntityStore.save()` call time. Mitigations:
+
+- Add a `validate_vectorable(obj)` helper that calls `to_document()` on a dummy
+  instance and type-checks the result. Call it in EntityStore with a clear error.
+- Document that pyright / mypy will catch signature mismatches if consumers use type
+  annotations correctly.
+
+### 8. No test isolation story in v1
+
+`FakeChatModel` is planned for Phase 6. Until then, any consumer CI that runs chain
+tests needs live API keys. This creates:
+
+- CI cost (API call charges on every PR)
+- Flakiness (network failures, rate limits)
+- Secret management overhead in every consumer repo
+
+Recommendation: move `FakeChatModel` to v1 scope. It is a small class and pays for
+itself immediately across all consumers.
+
+### 9. `EntityStore` couples two orthogonal concerns
+
+`EntityStore` currently ties together deduplication logic (SHA-256) and the
+`Vectorable` serialisation protocol. A project that wants the vector store without
+the `Vectorable` protocol (e.g. storing raw LangChain `Document` objects) cannot
+use `EntityStore` without going around it. Consider splitting:
+
+- `DeduplicatingVectorStore` - wraps any LangChain vector store, adds SHA-256 dedup.
+- `EntityStore` - adds `Vectorable` serialisation on top of `DeduplicatingVectorStore`.
+
+### 10. The `to_prompt()` convention is untyped and unenforced
+
+Anything that feeds an LLM context is expected to implement `to_prompt() -> str`,
+but there is no protocol or ABC enforcing this. Silent breakage if a class
+omits the method and its output is fed to a chain via string interpolation
+instead. Minimal fix: add a `Promptable` protocol alongside `Vectorable` and
+type-annotate chain input fields that expect it.
+
 ---
 
 ## Migration Path for Existing Repos
@@ -413,3 +620,85 @@ wheels. laife would use `llm-tools[all]`; recipamatic / convo-craft would use
 | **recipamatic** | Replace `langchain_openai_/chat_openai_config.py` + `RecipeCoreTranscriber` internals with `llm-tools`. The Pydantic output models (`RecipeCore`, etc.) stay in recipamatic. |
 | **recipinator** | Replace `data/vector_db.py` with `llm-tools.vectorstores.cchroma.CChroma` + `EntityStore`. |
 | **tg-central-hub-bot** | Will use `llm-tools` for any future LLM features (currently has none). |
+
+---
+
+## PostgreSQL Vector Store and SQLModel (v1.5 addition)
+
+For projects that already run Postgres, a separate Chroma process is an unnecessary
+operational dependency. `pgvector` turns Postgres into a vector store and keeps all
+persistence in one place.
+
+**New files in `llm-tools`:**
+
+```
+src/llm_tools/vectorstores/
+    config/
+        postgres.py          # PostgresVectorConfig(VectorStoreConfig)
+    cpostgres.py             # dedup-aware wrapper around langchain-postgres PGVector
+```
+
+**New optional dependency group:**
+
+```toml
+postgres = ["langchain-postgres>=0.0.12", "psycopg[binary]>=3.1", "sqlmodel>=0.0.21"]
+```
+
+**`PostgresVectorConfig`** - minimal required fields:
+
+```python
+class PostgresVectorConfig(VectorStoreConfig):
+    connection_string: SecretStr   # postgresql+psycopg://user:pass@host/db
+    collection_name: str
+    embeddings_config: EmbeddingsConfig
+    pre_delete_collection: bool = False
+
+    def create_store(self) -> PGVector:
+        return PGVector(
+            embeddings=self.embeddings_config.create_embeddings(),
+            collection_name=self.collection_name,
+            connection=self.connection_string.get_secret_value(),
+            pre_delete_collection=self.pre_delete_collection,
+        )
+```
+
+`EntityStore` needs no changes - it accepts any `VectorStoreConfig` and calls
+`add_documents` / `similarity_search` through the same interface.
+
+**Typed metadata and combined queries:**
+
+PGVector stores metadata as JSONB alongside the vector. This enables combined
+vector + SQL filter queries without a second database:
+
+```python
+# search with metadata filter (passed through to PGVector's filter kwarg)
+results = store.search_typed(
+    query="pasta recipe",
+    entity_type=RecipeEntity,
+    filter={"cuisine": "italian", "serves": {"$gte": 4}},
+)
+```
+
+For richer SQL access (joins, aggregations, full-text search alongside vectors)
+use **SQLModel** to define the same entities as ORM models. The `Vectorable`
+protocol and the SQLModel class co-exist on the same entity:
+
+```python
+class RecipeEntity(SQLModel, table=True):   # SQLModel ORM
+    id: str = Field(primary_key=True)
+    name: str
+    cuisine: str
+
+    # Vectorable protocol implementation
+    def to_document(self) -> Document: ...
+    @classmethod
+    def from_document(cls, doc: Document) -> "RecipeEntity": ...
+    def to_prompt(self) -> str: ...
+```
+
+This avoids maintaining two parallel model hierarchies. The same entity is
+read/written via both SQLModel queries and `EntityStore` vector search.
+
+**`llm-tools` provides** the `PostgresVectorConfig` and the dedup wrapper.
+**The consumer project** owns the SQLModel table definitions and the migration
+strategy (Alembic or `SQLModel.metadata.create_all`).
