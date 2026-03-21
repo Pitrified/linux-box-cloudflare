@@ -10,6 +10,8 @@ Head over to [01_box_setup.md](docs/01_box_setup.md) for detailed instructions o
 **`dotfiles`** - Personal dotfiles. Includes shell config, editor config, and other
 personalization. Managed with custom python script.
 
+**`pitrified.github.io`** _(planned)_ - Personal static site. zensical + GitHub Pages. Home for the blog and other static content, presenting this framework.
+
 ---
 
 ## Framework / Tooling
@@ -24,7 +26,7 @@ Provides: `create_app()` factory, Google OAuth, session management, security
 middleware (CSP, trusted hosts, proxy headers), Jinja2 templating, health
 router, common schemas and exceptions. All FastAPI micro-services depend on this.
 
-**`llm-tools`** _(planned)_ - Installable library for LLM-driven projects. Provides: prompt
+**`llm-core`** _(new)_ - Installable library for LLM-driven projects. Provides: prompt
 templates, structured output parsing with Pydantic, and common LLM chains. Used by
 `convo-craft` and `laife` for prompt management and response parsing.
 
@@ -32,6 +34,13 @@ templates, structured output parsing with Pydantic, and common LLM chains. Used 
 Provides: config management with Pydantic, standardized logging, and helper
 functions and classes (eg. `Singleton`, `BaseModelKwargs`). Used across all
 projects for config and logging consistency.
+
+**`whisper-tts`** _(planned)_ - Micro-service for audio transcription and generation. Used by `recipamatic` for transcribing recipe videos.
+
+**`social-media-downloader`** _(planned)_ - Micro-service to download media and
+extract metadata from social URLs (Instagram, YouTube, WebPages etc.). Clean boundary:
+input is a URL, output is a structured `DownloadedMedia` object. Used by
+`recipamatic` and `tg-central-hub-bot`.
 
 ---
 
@@ -73,6 +82,10 @@ OpenAI backend, structured output with Pydantic.
 **`brazilian-bites`** - Flashcard minimal app. Heavy focus on false friends.
 React + shadcn/ui + Tailwind + Supabase. Built with Lovable.
 
+**`accenter`** _(planned)_ - write words with diacritics to practice accent placement in Portuguese.
+
+**`worlde-multilingual`** _(planned)_ - Multilingual Wordle clone, with different languages and word lengths.
+
 ---
 
 ## Travel / Maps
@@ -80,6 +93,10 @@ React + shadcn/ui + Tailwind + Supabase. Built with Lovable.
 **`trip-me-up`** - Trip planner from Google Maps saved lists. Takes a Google
 Takeout export, fetches place details, computes distances between neighbourhoods,
 and plans an itinerary.
+
+**`saved-places`** _(planned)_ - Webapp to view and manage Google Maps saved places. Syncs with Google Takeout exports, provides a nicer UI for browsing and organizing saved places.
+
+**`google-maps-tools`** _(planned)_ - Installable library for working with Google Maps data. Provides utilities for parsing Takeout exports, fetching place details, and computing distances.
 
 ---
 
@@ -106,15 +123,3 @@ compute and render what the viewer sees on the screen.
 
 **`pose-tools`** _(planned)_ - Installable library for pose tracking and analysis. Provides
 common utilities for working with pose data, including MediaPipe integration, homography utilities.
-
----
-
-## Planned
-
-**`social-media-downloader`** _(planned)_ - Micro-service to download media and
-extract metadata from social URLs (Instagram, YouTube, WebPages etc.). Clean boundary:
-input is a URL, output is a structured `DownloadedMedia` object. Used by
-`recipamatic` and `tg-central-hub-bot`.
-
-**`pitrified.github.io`** _(planned)_ - Personal static site. zensical + GitHub Pages. Home for
-the blog and other static content, presenting this framework.
