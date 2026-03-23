@@ -35,7 +35,7 @@ Provides: config management with Pydantic, standardized logging, and helper
 functions and classes (eg. `Singleton`, `BaseModelKwargs`). Used across all
 projects for config and logging consistency.
 
-**`whisper-tts`** _(planned)_ - Micro-service for audio transcription and generation. Used by `recipamatic` for transcribing recipe videos.
+**`whisper-tts`** _(new)_ - Micro-service for audio transcription and generation. Used by `recipamatic` for transcribing recipe videos. --> folded into `llm-core` for now, may split out later if it grows.
 
 **`social-media-downloader`** _(planned)_ - Micro-service to download media and
 extract metadata from social URLs (Instagram, YouTube, WebPages etc.). Clean boundary:
