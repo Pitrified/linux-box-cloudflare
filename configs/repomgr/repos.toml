@@ -1,0 +1,93 @@
+# repos.toml - repomgr config for the linux-box workspace
+#
+# Usage:
+#   repomgr --config ~/repos/linux-box-cloudflare/configs/repomgr/repos.toml status
+#
+# state_file is resolved relative to this file's parent directory.
+
+[settings]
+base_path        = "~/repos"
+default_test_cmd = "uv run pytest"
+state_file       = "./repos.state.json"
+
+# ---------------------------------------------------------------------------
+# Sources - produce versioned tags consumed by other repos
+# ---------------------------------------------------------------------------
+
+[[repo]]
+name       = "llm-core"
+remote     = "git@github.com:Pitrified/llm-core.git"
+roles      = ["source"]
+auto_merge = true
+
+[[repo]]
+name       = "fastapi-tools"
+remote     = "git@github.com:Pitrified/fastapi-tools.git"
+roles      = ["source"]
+auto_merge = true
+
+# Source + consumer: depends on llm-core + fastapi-tools; consumed by kit-hub
+[[repo]]
+name       = "media-downloader"
+remote     = "git@github.com:Pitrified/media-downloader.git"
+roles      = ["source", "consumer"]
+auto_merge = true
+
+# ---------------------------------------------------------------------------
+# Consumers - depend on git-sourced packages from the sources above
+# ---------------------------------------------------------------------------
+
+[[repo]]
+name   = "laife"
+remote = "git@github.com:Pitrified/laife.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "kit-hub"
+remote = "git@github.com:Pitrified/kit-hub.git"
+roles  = ["consumer"]
+
+# ---------------------------------------------------------------------------
+# Standalone - tracked for git status/fetch only, not in dep chain
+# ---------------------------------------------------------------------------
+
+[[repo]]
+name   = "linux-box-cloudflare"
+remote = "git@github.com:Pitrified/linux-box-cloudflare.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "repomgr"
+remote = "git@github.com:Pitrified/repomgr.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "tg-central-hub-bot"
+remote = "git@github.com:Pitrified/tg-central-hub-bot.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "python-project-template"
+remote = "git@github.com:Pitrified/python-project-template.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "recipamatic"
+remote     = "git@github.com:Pitrified/recipamatic.git"
+roles      = ["consumer"]
+test_cmd   = "cd py && poetry run pytest"
+
+[[repo]]
+name   = "recipinator"
+remote = "git@github.com:Pitrified/recipinator.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "cookbook"
+remote = "git@github.com:Pitrified/cookbook.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "convo_craft"
+remote = "git@github.com:Pitrified/convo-craft.git"
+roles  = ["consumer"]
