@@ -1,2 +1,5 @@
 # Cloudflare tunnel credentials - never commit these
 configs/cloudflared/*.json
+
+# state for repomgr
+configs/repomgr/repos.state.json
