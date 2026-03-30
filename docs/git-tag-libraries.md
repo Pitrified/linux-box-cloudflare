@@ -199,6 +199,6 @@ line if your layout differs.
 
 | Library            | Version | Tag pushed | GitHub URL                                      |
 | ------------------ | ------- | ---------- | ----------------------------------------------- |
-| `llm-core`         | 0.1.0   | yes        | <https://github.com/Pitrified/llm-core>         |
+| `llm-core`         | 0.2.1   | yes        | <https://github.com/Pitrified/llm-core>         |
 | `fastapi-tools`    | 0.1.0   | yes        | <https://github.com/Pitrified/fastapi-tools>    |
-| `media-downloader` | 0.1.1   | yes        | <https://github.com/Pitrified/media-downloader> |
+| `media-downloader` | 0.1.2   | yes        | <https://github.com/Pitrified/media-downloader> |
