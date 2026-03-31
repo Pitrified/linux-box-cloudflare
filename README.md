@@ -16,7 +16,9 @@ Head over to [01_box_setup.md](docs/01_box_setup.md) for detailed instructions o
 **`dotfiles`** - Personal dotfiles. Includes shell config, editor config, and other
 personalization. Managed with custom python script.
 
-**`pitrified.github.io`** _(planned)_ - Personal static site. zensical + GitHub Pages. Home for the blog and other static content, presenting this framework.
+**`pitrified.github.io`** _(planned)_ - Personal static site. zensical + GitHub Pages.
+Home for the blog and other static content, presenting this framework.
+Heavy overlap with the solution `linux-box-cloudflare/sites/overview/index.html` to serve a site on (https://pitrified.github.io/linux-box-cloudflare/).
 
 ---
 
@@ -41,7 +43,9 @@ Provides: config management with Pydantic, standardized logging, and helper
 functions and classes (eg. `Singleton`, `BaseModelKwargs`). Used across all
 projects for config and logging consistency.
 
-**`whisper-tts`** _(new)_ - Micro-service for audio transcription and generation. Used by `recipamatic` for transcribing recipe videos. --> folded into `llm-core` for now, may split out later if it grows.
+**`whisper-tts`** _(new)_ - Micro-service for audio transcription and generation.
+Used by `recipamatic` for transcribing recipe videos.
+--> folded into `llm-core` for now, may split out later if it grows.
 
 **`social-media-downloader`** _(planned)_ - Micro-service to download media and
 extract metadata from social URLs (Instagram, YouTube, WebPages etc.). Clean boundary:
@@ -81,16 +85,19 @@ and a configurable parser for extracting structured recipes from unstructured te
 
 ## Language Learning
 
-**`convo-craft`** - Generates bilingual conversations via LLM, lets the user
-translate one side to practice a target language. Streamlit UI, LangChain /
-OpenAI backend, structured output with Pydantic.
+**`convo_craft`** - Generates bilingual conversations via LLM, lets the user translate one side to practice a target language.
+Streamlit UI, LangChain / OpenAI backend, structured output with Pydantic.
+Very close to `fala-comigo-ai-tutor` which was built with Lovable, but offer different functionality.
 
 **`brazilian-bites`** - Flashcard minimal app. Heavy focus on false friends.
 React + shadcn/ui + Tailwind + Supabase. Built with Lovable.
+Note that there are some large `.csv` files (not tracked), which are semi-ready to be ingested (there is some upload endpoint to do so).
 
 **`accenter`** _(planned)_ - write words with diacritics to practice accent placement in Portuguese.
+It's a refactor of `go-accenter` which did the same in `go` for french.
 
 **`worlde-multilingual`** _(planned)_ - Multilingual Wordle clone, with different languages and word lengths.
+It's a refactor of `worldly-words` which was done with lovable.
 
 ---
 
@@ -129,3 +136,11 @@ compute and render what the viewer sees on the screen.
 
 **`pose-tools`** _(planned)_ - Installable library for pose tracking and analysis. Provides
 common utilities for working with pose data, including MediaPipe integration, homography utilities.
+
+---
+
+## Epub handling
+
+**`interleaver?`** - Tool to interleave two epub files paragraph by paragraph. Useful for language learning with bilingual ebooks.
+
+**`???`** - things i'm forgetting
