@@ -91,3 +91,23 @@ roles  = ["consumer"]
 name   = "convo_craft"
 remote = "git@github.com:Pitrified/convo-craft.git"
 roles  = ["consumer"]
+
+[[repo]]
+name   = "brazilian-bites"
+remote = "git@github.com:Pitrified/brazilian-bites.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "worldly-words"
+remote = "git@github.com:Pitrified/worldly-words.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "fala-comigo-ai-tutor"
+remote = "git@github.com:Pitrified/fala-comigo-ai-tutor.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "go-accenter"
+remote = "git@github.com:Pitrified/go-accenter.git"
+roles  = ["consumer"]

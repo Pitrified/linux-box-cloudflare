@@ -51,6 +51,22 @@
 		{
 			"name": "convo_craft",
 			"path": "../convo_craft"
+		},
+		{
+			"name": "brazilian-bites",
+			"path": "../brazilian-bites"
+		},
+		{
+			"name": "worldly-words",
+			"path": "../worldly-words"
+		},
+		{
+			"name": "fala-comigo-ai-tutor",
+			"path": "../fala-comigo-ai-tutor"
+		},
+		{
+			"name": "go-accenter",
+			"path": "../go-accenter"
 		}
 	],
 	"settings": {
