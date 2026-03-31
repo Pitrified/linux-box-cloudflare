@@ -111,3 +111,23 @@ roles  = ["consumer"]
 name   = "go-accenter"
 remote = "git@github.com:Pitrified/go-accenter.git"
 roles  = ["consumer"]
+
+[[repo]]
+name   = "trip-me-up"
+remote = "git@github.com:Pitrified/trip-me-up.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "climbing-wire"
+remote = "git@github.com:Pitrified/climbing-wire.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "holo-table"
+remote = "git@github.com:Pitrified/holo-table.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "abyss"
+remote = "git@github.com:Pitrified/abyss.git"
+roles  = ["consumer"]

@@ -67,6 +67,22 @@
 		{
 			"name": "go-accenter",
 			"path": "../go-accenter"
+		},
+		{
+			"name": "trip-me-up",
+			"path": "../trip-me-up"
+		},
+		{
+			"name": "climbing-wire",
+			"path": "../climbing-wire"
+		},
+		{
+			"name": "holo-table",
+			"path": "../holo-table"
+		},
+		{
+			"name": "abyss",
+			"path": "../abyss"
 		}
 	],
 	"settings": {
