@@ -1,6 +1,6 @@
 # Phase 1 - Create `google-maps-tools` library
 
-**Status:** not started  
+**Status:** done  
 **Depends on:** nothing (greenfield)  
 **Blocks:** Phase 2 (trip-me-up rebuild), Phase 3 (saved-places)
 
@@ -12,7 +12,7 @@ conventions (uv, ruff ALL, pyright, Python 3.14).
 
 ## 1.1 - Repo bootstrap
 
-**Status:** not started
+**Status:** done (repo renamed to `places-tools`)
 
 - Create `google-maps-tools` from `python-project-template` via `rename-project`.
 - Configure `pyproject.toml`: package name `google_maps_tools`, Python >= 3.14.
@@ -24,7 +24,7 @@ conventions (uv, ruff ALL, pyright, Python 3.14).
 
 ## 1.2 - Canonical place data models
 
-**Status:** not started
+**Status:** done
 
 Define the core Pydantic models that every sub-project will share. These live in
 `src/google_maps_tools/models/`.
@@ -57,7 +57,7 @@ Design rules:
 
 ## 1.3 - Google Takeout parser
 
-**Status:** not started
+**Status:** done
 
 Module: `src/google_maps_tools/takeout/`
 
@@ -89,7 +89,7 @@ empty files, and mixed encodings.
 
 ## 1.4 - HTTP caching layer
 
-**Status:** not started
+**Status:** done
 
 Module: `src/google_maps_tools/cache/`
 
@@ -113,7 +113,7 @@ Requirements:
 
 ## 1.5 - Google Places API client
 
-**Status:** not started
+**Status:** done
 
 Module: `src/google_maps_tools/places/`
 
@@ -153,7 +153,7 @@ Port and modernize `FindPlace` and `PlaceDetails` from `trip-me-up`.
 
 ## 1.6 - Geo utilities
 
-**Status:** not started
+**Status:** done
 
 Module: `src/google_maps_tools/geo/`
 
@@ -179,7 +179,7 @@ Module: `src/google_maps_tools/geo/`
 
 ## 1.7 - Params / config wiring
 
-**Status:** not started
+**Status:** done
 
 - `GoogleMapsToolsParams` singleton following the standard pattern.
 - `GoogleMapsToolsPaths` with `cache_fol`, `data_fol`.
@@ -192,7 +192,7 @@ Module: `src/google_maps_tools/geo/`
 
 ## 1.8 - Docs and verification
 
-**Status:** not started
+**Status:** done
 
 - Write `docs/library/places_client.md` and `docs/library/takeout_parser.md`.
 - Full verification: `uv run pytest && uv run ruff check . && uv run pyright`.

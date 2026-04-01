@@ -10,7 +10,7 @@ Core analysis: [00-places-overview.md](./00-places-overview.md)
 
 | Phase | Description | Status | Sub-plan |
 | ----- | ----------- | ------ | -------- |
-| 1 | Create `google-maps-tools` library | not started | [02-phase1-google-maps-tools.md](./02-phase1-google-maps-tools.md) |
+| 1 | Create `google-maps-tools` library | done | [02-phase1-google-maps-tools.md](./02-phase1-google-maps-tools.md) |
 | 2 | Rebuild `trip-me-up` on `google-maps-tools` | not started | [03-phase2-trip-me-up-rebuild.md](./03-phase2-trip-me-up-rebuild.md) |
 | 3 | Build `saved-places` webapp | not started | [04-phase3-saved-places-webapp.md](./04-phase3-saved-places-webapp.md) |
 
@@ -20,14 +20,14 @@ Core analysis: [00-places-overview.md](./00-places-overview.md)
 
 | Task | Description | Status |
 | ---- | ----------- | ------ |
-| 1.1 | Repo bootstrap | not started |
-| 1.2 | Canonical place data models | not started |
-| 1.3 | Google Takeout parser (CSV + GeoJSON) | not started |
-| 1.4 | HTTP caching layer | not started |
-| 1.5 | Google Places API client | not started |
-| 1.6 | Geo utilities (haversine, clustering) | not started |
-| 1.7 | Params / config wiring | not started |
-| 1.8 | Docs and verification | not started |
+| 1.1 | Repo bootstrap | done |
+| 1.2 | Canonical place data models | done |
+| 1.3 | Google Takeout parser (CSV + GeoJSON) | done |
+| 1.4 | HTTP caching layer | done |
+| 1.5 | Google Places API client | done |
+| 1.6 | Geo utilities (haversine, clustering) | done |
+| 1.7 | Params / config wiring | done |
+| 1.8 | Docs and verification | done |
 
 ## Phase 2 - `trip-me-up` rebuild sub-tasks
 

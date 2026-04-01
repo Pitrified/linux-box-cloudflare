@@ -83,6 +83,14 @@
 		{
 			"name": "abyss",
 			"path": "../abyss"
+		},
+		{
+			"name": "pose-tools",
+			"path": "../pose-tools"
+		},
+		{
+			"name": "places-tools",
+			"path": "../places-tools"
 		}
 	],
 	"settings": {

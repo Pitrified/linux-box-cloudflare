@@ -9,42 +9,42 @@ Core analysis: [00-pose-overview.md](./00-pose-overview.md)
 
 | Phase | Plan | Status | Summary |
 |-------|------|--------|---------|
-| 1 - Foundation | [02-phase1-foundation.md](./02-phase1-foundation.md) | not started | Repo scaffolding, Frame, video loading, CV/plt/mediapipe/numpy utils |
-| 2 - Landmark layer | [03-phase2-landmark-layer.md](./03-phase2-landmark-layer.md) | not started | Landmarker wrappers (pose + hand), drawing, landmark array, distance, model manager |
-| 3 - Geometry | [04-phase3-geometry.md](./04-phase3-geometry.md) | not started | Homography, coordinate geometry, signal processing boundary decision |
+| 1 - Foundation | [02-phase1-foundation.md](./02-phase1-foundation.md) | done | Repo scaffolding, Frame, video loading, CV/plt/mediapipe/numpy utils |
+| 2 - Landmark layer | [03-phase2-landmark-layer.md](./03-phase2-landmark-layer.md) | done | Landmarker wrappers (pose + hand), drawing, landmark array, distance, model manager |
+| 3 - Geometry | [04-phase3-geometry.md](./04-phase3-geometry.md) | done | Homography, coordinate geometry, signal processing boundary decision |
 | 4 - Migrate consumers | [05-phase4-migrate-consumers.md](./05-phase4-migrate-consumers.md) | not started | Migrate abyss -> holo-table -> climbing-wire to depend on pose-tools |
 
 ## Phase 1 - Foundation (7 sub-tasks)
 
 | # | Sub-task | Status | Notes |
 |---|----------|--------|-------|
-| 1.1 | Repo scaffolding | not started | Create pose-tools from python-project-template |
-| 1.2 | Frame dataclass | not started | Unify on mp.Image-based Frame from holo-table/abyss |
-| 1.3 | Video loading | not started | VideoFrameIterator + convenience generators |
-| 1.4 | OpenCV display utils | not started | resize, cv_imshow, cv_imshow_rgb |
-| 1.5 | Matplotlib plot utils | not started | show_frame |
-| 1.6 | MediaPipe shared utils | not started | Protobuf converters, landmark constants, connections |
-| 1.7 | Numpy signal utils | not started | Rolling window filters, derivatives |
+| 1.1 | Repo scaffolding | done | Created from python-project-template, added mediapipe/opencv/matplotlib deps |
+| 1.2 | Frame dataclass | done | `video/frame.py` - mp.Image wrapper with factory methods + conversions |
+| 1.3 | Video loading | done | `video/load.py` - VideoFrameIterator context manager + list/iterate helpers |
+| 1.4 | OpenCV display utils | done | `utils/cv.py` - resize, cv_imshow, cv_imshow_rgb |
+| 1.5 | Matplotlib plot utils | done | `utils/plt.py` - show_frame |
+| 1.6 | MediaPipe shared utils | done | `utils/mediapipe.py` - Tasks API constants, connections, coordinate conversion |
+| 1.7 | Numpy signal utils | done | `utils/np_signal.py` - diff_pad, triangle filter, roll_append |
 
 ## Phase 2 - Landmark layer (7 sub-tasks)
 
 | # | Sub-task | Status | Notes |
 |---|----------|--------|-------|
-| 2.1 | Base landmarker pattern | not started | Protocol/ABC with detect(frame) dispatch |
-| 2.2 | Pose landmarker wrapper | not started | Port from abyss, Tasks API |
-| 2.3 | Hand landmarker wrapper | not started | Port from holo-table, Tasks API |
-| 2.4 | Landmark drawing | not started | Unified draw for pose + hand |
-| 2.5 | Landmark array (numpy) | not started | Modernize climbing-wire's LandmarkListNp/Img |
-| 2.6 | Landmark distance | not started | Generic distance + pinch level computation |
-| 2.7 | Model manager | not started | Config-based model path resolver |
+| 2.1 | Base landmarker pattern | done | `landmark/base.py` - PEP 695 generic BaseLandmarkerFrame[ResultT] |
+| 2.2 | Pose landmarker wrapper | done | `landmark/pose.py` - PoseLandmarkerFrame |
+| 2.3 | Hand landmarker wrapper | done | `landmark/hand.py` - HandLandmarkerFrame |
+| 2.4 | Landmark drawing | done | `landmark/drawing.py` - Tasks API draw_landmarks, no protobuf conversion |
+| 2.5 | Landmark array (numpy) | done | `landmark/landmark_array.py` - LandmarkArray + LandmarkArrayImg |
+| 2.6 | Landmark distance | done | `landmark/distance.py` - compute_landmark_dist + compute_pinch_level |
+| 2.7 | Model manager | done | `landmark/model_manager.py` - ModelManager with path resolution |
 
 ## Phase 3 - Geometry (3 sub-tasks)
 
 | # | Sub-task | Status | Notes |
 |---|----------|--------|-------|
-| 3.1 | Homography computation | not started | SIFT + RANSAC, decision: extract or leave in climbing-wire |
-| 3.2 | Landmark geometry | not started | Normalized-to-pixel coordinate math |
-| 3.3 | Signal processing | not started | Needs analysis: generic SignalTracker vs pinch-specific |
+| 3.1 | Homography computation | done | `geometry/homography.py` - SIFT + FLANN + RANSAC |
+| 3.2 | Landmark geometry | done | `geometry/landmark_geometry.py` - re-exports from utils.mediapipe |
+| 3.3 | Signal processing | done | `geometry/signal_tracker.py` - generic SignalTracker with derivative tracking |
 
 ## Phase 4 - Migrate consumers (3 sub-tasks)
 
