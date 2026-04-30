@@ -131,3 +131,13 @@ roles  = ["consumer"]
 name   = "abyss"
 remote = "git@github.com:Pitrified/abyss.git"
 roles  = ["consumer"]
+
+[[repo]]
+name   = "pose-tools"
+remote = "git@github.com:Pitrified/pose-tools.git"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "places-tools"
+remote = "git@github.com:Pitrified/places-tools.git"
+roles  = ["consumer"]
