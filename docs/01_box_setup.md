@@ -182,15 +182,20 @@ sudo apt install nginx -y
 
 **2. Place the Landing Page**
 
-Create a dedicated directory for the hub site and place your `index.html` there:
+Symlink `/var/www/hub` to the `sites/landing/` folder in this repo so that nginx serves the files directly from the checkout. To update the landing page, edit `sites/landing/index.html` and nginx picks up the change immediately.
 
 ```bash
-sudo mkdir -p /var/www/hub
-sudo cp /path/to/index.html /var/www/hub/index.html
-sudo chown -R www-data:www-data /var/www/hub
+sudo mkdir -p /var/www
+sudo ln -sfn /path/to/linux-box-cloudflare/sites/landing /var/www/hub
 ```
 
-The `index.html` file lives in the `site/` directory of the [linux-box-cloudflare](https://github.com/Pitrified/linux-box-cloudflare) repo. To update the landing page, edit that file and re-copy it here, or set up a git pull workflow.
+Or run the provided script (see `scripts/README.md`) which resolves the repo path automatically:
+
+```bash
+sudo bash scripts/setup-symlinks.sh
+```
+
+The landing page lives in `sites/landing/` of the [linux-box-cloudflare](https://github.com/Pitrified/linux-box-cloudflare) repo.
 
 **3. Create an nginx Site Config**
 

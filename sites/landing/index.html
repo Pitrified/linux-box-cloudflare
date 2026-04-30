@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pitrified · hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">pitrified.qzz.io</p>
+      <h1>local<span>.</span>hub</h1>
+      <p class="subtitle">
+        Personal services running on the home box,<br />tunnelled via
+        Cloudflare. Access is restricted.
+      </p>
+
+      <div class="divider"></div>
+
+      <p class="section-label">Services</p>
+
+      <div class="apps">
+        <!-- ── Add your apps below. Copy a card block for each service. ── -->
+
+        <a class="app-card" href="https://app1.pitrified.qzz.io">
+          <span class="app-name">app1</span>
+          <span class="app-desc">Short description of what this does.</span>
+          <span class="app-tag">:8080</span>
+        </a>
+
+        <a class="app-card" href="https://app2.pitrified.qzz.io">
+          <span class="app-name">app2</span>
+          <span class="app-desc">Short description of what this does.</span>
+          <span class="app-tag">:3000</span>
+        </a>
+
+        <a class="app-card" href="https://bot.pitrified.qzz.io">
+          <span class="app-name">telegram bot</span>
+          <span class="app-desc">Webhook listener for the Telegram bot.</span>
+          <span class="app-tag">:5000</span>
+        </a>
+
+        <!-- placeholder - remove when you have a 4th service -->
+        <div class="app-card placeholder">
+          <span class="app-name">+ add service</span>
+          <span class="app-desc">Edit sites/landing/index.html in the repo.</span>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <span class="status">
+        <span class="status-dot"></span>
+        tunnel active
+      </span>
+      <span class="host">cloudflare tunnel · zero trust</span>
+    </footer>
+  </body>
+</html>

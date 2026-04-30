@@ -29,6 +29,12 @@ echo "=== nginx ==="
 link "$REPO/configs/nginx/hub" /etc/nginx/sites-available/hub
 
 echo ""
+echo "=== sites ==="
+sudo mkdir -p /var/www
+ln -sfn "$REPO/sites/landing" /var/www/hub
+echo "  linked /var/www/hub -> $REPO/sites/landing"
+
+echo ""
 echo "=== sysctl ==="
 link "$REPO/configs/sysctl/99-hardening.conf" /etc/sysctl.d/99-hardening.conf
 
