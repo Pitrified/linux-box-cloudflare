@@ -95,6 +95,10 @@
 		{
 			"name": "lang-tools",
 			"path": "../lang-tools"
+		},
+		{
+			"name": "python-tools",
+			"path": "../python-tools"
 		}
 	],
 	"settings": {
