@@ -91,6 +91,10 @@
 		{
 			"name": "places-tools",
 			"path": "../places-tools"
+		},
+		{
+			"name": "lang-tools",
+			"path": "../lang-tools"
 		}
 	],
 	"settings": {

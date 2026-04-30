@@ -201,6 +201,10 @@ Implementation: use `unicodedata.normalize("NFD", ...)` + category filtering as 
 ## Open questions
 
 - Should `Word.id` be a UUID or a composite key of `(text, language)`? UUID is simpler for DB, composite is more natural for dedup.
+  ANSWER: hash of (text, language) for deterministic IDs and easier deduplication.
 - Should `translations` be a simple dict or a list of `Translation` objects with metadata (source: "human"/"llm", confidence)?
+  ANSWER: simple dict for now; we can add metadata later if needed.
 - How to handle multi-word expressions (brazilian-bites has these as `word_type: "expression"`)? Same `Word` model or a separate `Phrase` model?
+  ANSWER: same `Word` model with a `part_of_speech` of "expression" or similar.
 - Should `glosses` be per-sense (Wiktionary style) or flattened? Per-sense is richer but more complex.
+  ANSWER: per-sense for richness, with the option to flatten if needed.

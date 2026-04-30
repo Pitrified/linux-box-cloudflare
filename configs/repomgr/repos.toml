@@ -141,3 +141,8 @@ roles  = ["consumer"]
 name   = "places-tools"
 remote = "git@github.com:Pitrified/places-tools.git"
 roles  = ["consumer"]
+
+[[repo]]
+name   = "lang-tools"
+remote = "git@github.com:Pitrified/lang-tools.git"
+roles  = ["consumer"]

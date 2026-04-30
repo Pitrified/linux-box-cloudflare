@@ -218,5 +218,8 @@ Use `PromptLoader(version="auto")` to pick the latest version. Never edit an exi
 ## Open questions
 
 - Should the tutor chain return `errors` as structured data, or is free-text correction sufficient? Structured is better for progress tracking but harder for the LLM to produce consistently.
+  ANSWER: structured `errors` with `original`, `corrected`, and `explanation` fields. This enables feeding mistakes back into the learning algorithm. LLMs with structured output are good now.
 - Do we need a `WordGeneratorChain` that can create vocabulary items (with translations, examples, glosses) on the fly? This could supplement static word lists.
+  ANSWER: yes.
 - Should translation happen inline (as part of conversation/tutor chains) or always via a dedicated `TranslationChain` call? Inline reduces latency; dedicated is more composable.
+  ANSWER: inline for conversation/tutor chains to reduce latency and ensure translations are contextually aligned. Dedicated `TranslationChain` can still be used for on-demand translations elsewhere.
