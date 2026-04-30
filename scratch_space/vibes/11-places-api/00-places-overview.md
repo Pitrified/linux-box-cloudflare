@@ -193,7 +193,10 @@ A phased approach to unifying the three projects around a shared foundation.
 
 - Should `google-maps-tools` also wrap the Distance Matrix and Directions
   APIs, or keep scope limited to Places + Takeout?
+  ANSWER: yes, we implemented a generic `places-tools`. a dedicated module for distance can be added.
 - Should `saved-places` sync periodically with Google Takeout, or is a
   one-time import sufficient?
+  ANSWER: manual import is fine for now; we can add periodic sync later if needed.
 - How much of the vector-store / LLM integration belongs in
   `google-maps-tools` vs. in the consuming apps?
+  ANSWER: none. places api do something else, consumer app will decide if and how to use it.
