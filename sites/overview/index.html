@@ -22,35 +22,194 @@
 
     <div class="bubble-stage">
 
-      <div class="bubble" id="b-laife" data-label="lAIfe" style="--x: 50%; --y: 22%;">
+      <!-- ── Ecosystem ── -->
+      <div class="bubble" id="b-ecosystem" data-label="linux-box" style="--x: 50%; --y: 7%;">
         <div class="bubble-content">
-          <span class="bname">lAIfe</span>
-          <span class="bdesc">LLM-driven life-simulation game. Pygame + asyncio, autonomous AI agents.</span>
-          <span class="btag">python · llm</span>
+          <span class="bname">linux-box</span>
+          <span class="bdesc">Home server ecosystem. Cloudflare Tunnel, all services, one box.</span>
+          <span class="btag">devops · infra</span>
         </div>
       </div>
 
-      <div class="bubble" id="b-fastapi" data-label="fastapi-tools" style="--x: 24%; --y: 44%;">
+      <!-- ── Flagship apps ── -->
+      <div class="bubble" id="b-laife" data-label="lAIfe" style="--x: 20%; --y: 21%;">
         <div class="bubble-content">
-          <span class="bname">fastapi-tools</span>
-          <span class="bdesc">Reusable FastAPI toolkit - auth, rate limiting, HTMX, OAuth.</span>
+          <span class="bname">lAIfe</span>
+          <span class="bdesc">LLM-driven life simulation. Autonomous AI agents, Pygame + asyncio.</span>
+          <span class="btag">python · llm · game</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-kithub" data-label="kit-hub" style="--x: 50%; --y: 21%;">
+        <div class="bubble-content">
+          <span class="bname">kit-hub</span>
+          <span class="bdesc">Recipe management app. LLM parsing, voice notes, HTMX interface.</span>
           <span class="btag">python · fastapi</span>
         </div>
       </div>
 
-      <div class="bubble" id="b-hub" data-label="local hub" style="--x: 76%; --y: 44%;">
+      <div class="bubble" id="b-tgbot" data-label="tg-bot" style="--x: 80%; --y: 21%;">
         <div class="bubble-content">
-          <span class="bname">local hub</span>
-          <span class="bdesc">Home server tunnelled via Cloudflare Zero Trust. Self-hosted services.</span>
-          <span class="btag">devops · nginx</span>
+          <span class="bname">tg-bot</span>
+          <span class="bdesc">Telegram bot + webapp. Primary interface to the linux-box ecosystem.</span>
+          <span class="btag">python · telegram</span>
         </div>
       </div>
 
-      <div class="bubble" id="b-template" data-label="py-template" style="--x: 50%; --y: 68%;">
+      <!-- ── Core libraries ── -->
+      <div class="bubble" id="b-llmcore" data-label="llm-core" style="--x: 10%; --y: 35%;">
+        <div class="bubble-content">
+          <span class="bname">llm-core</span>
+          <span class="bdesc">LLM tooling library. Structured chains, versioned prompts, multi-provider.</span>
+          <span class="btag">python · llm</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-fastapitools" data-label="fastapi-tools" style="--x: 30%; --y: 35%;">
+        <div class="bubble-content">
+          <span class="bname">fastapi-tools</span>
+          <span class="bdesc">FastAPI toolkit. OAuth, sessions, HTMX, CSP middleware, Jinja2.</span>
+          <span class="btag">python · fastapi</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-mediadownloader" data-label="media-dl" style="--x: 50%; --y: 35%;">
+        <div class="bubble-content">
+          <span class="bname">media-dl</span>
+          <span class="bdesc">Media download service. Instagram, YouTube, web recipes, transcription.</span>
+          <span class="btag">python · fastapi</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-template" data-label="py-template" style="--x: 70%; --y: 35%;">
         <div class="bubble-content">
           <span class="bname">py-template</span>
-          <span class="bdesc">Python project scaffold - Haystack, FastAPI, uv, ruff, pyright.</span>
+          <span class="bdesc">Python project scaffold. uv, ruff, pyright, MkDocs, FastAPI.</span>
           <span class="btag">python · scaffold</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-repomgr" data-label="repomgr" style="--x: 90%; --y: 35%;">
+        <div class="bubble-content">
+          <span class="bname">repomgr</span>
+          <span class="bdesc">Repo fleet manager. Status, fetch, dep updates across all repos.</span>
+          <span class="btag">python · cli</span>
+        </div>
+      </div>
+
+      <!-- ── Recipe domain ── -->
+      <div class="bubble" id="b-recipamatic" data-label="recipamatic" style="--x: 20%; --y: 48%;">
+        <div class="bubble-content">
+          <span class="bname">recipamatic</span>
+          <span class="bdesc">Recipe ingestion pipeline. Scrapes Instagram reels, downloads media.</span>
+          <span class="btag">python · svelte</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-recipinator" data-label="recipinator" style="--x: 50%; --y: 48%;">
+        <div class="bubble-content">
+          <span class="bname">recipinator</span>
+          <span class="bdesc">Recipe CRUD service. Normalized model, FastAPI + React.</span>
+          <span class="btag">python · react</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-cookbook" data-label="cookbook" style="--x: 80%; --y: 48%;">
+        <div class="bubble-content">
+          <span class="bname">cookbook</span>
+          <span class="bdesc">Personal recipe site in Italian. Jekyll + GitHub Pages.</span>
+          <span class="btag">jekyll · italian</span>
+        </div>
+      </div>
+
+      <!-- ── Language learning ── -->
+      <div class="bubble" id="b-convocraft" data-label="convo-craft" style="--x: 10%; --y: 62%;">
+        <div class="bubble-content">
+          <span class="bname">convo-craft</span>
+          <span class="bdesc">Bilingual conversation practice via LLM. Streamlit + LangChain.</span>
+          <span class="btag">python · llm</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-brazilianbites" data-label="br-bites" style="--x: 30%; --y: 62%;">
+        <div class="bubble-content">
+          <span class="bname">br-bites</span>
+          <span class="bdesc">Flashcard app focused on false friends. React + Supabase.</span>
+          <span class="btag">react · portuguese</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-worldlywords" data-label="worldly-words" style="--x: 50%; --y: 62%;">
+        <div class="bubble-content">
+          <span class="bname">worldly-words</span>
+          <span class="bdesc">Multilingual Wordle clone. React + Tailwind.</span>
+          <span class="btag">react · language</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-falacomigo" data-label="fala-comigo" style="--x: 70%; --y: 62%;">
+        <div class="bubble-content">
+          <span class="bname">fala-comigo</span>
+          <span class="bdesc">AI language tutor. LLM conversation practice app.</span>
+          <span class="btag">react · llm</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-goaccenter" data-label="go-accenter" style="--x: 90%; --y: 62%;">
+        <div class="bubble-content">
+          <span class="bname">go-accenter</span>
+          <span class="bdesc">Accent placement practice for Portuguese. CLI tool in Go.</span>
+          <span class="btag">go · language</span>
+        </div>
+      </div>
+
+      <!-- ── Computer vision ── -->
+      <div class="bubble" id="b-climbingwire" data-label="climbing-wire" style="--x: 12.5%; --y: 76%;">
+        <div class="bubble-content">
+          <span class="bname">climbing-wire</span>
+          <span class="bdesc">Pose tracking on climbing videos. MediaPipe + DTW alignment.</span>
+          <span class="btag">python · cv</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-holotable" data-label="holo-table" style="--x: 37.5%; --y: 76%;">
+        <div class="bubble-content">
+          <span class="bname">holo-table</span>
+          <span class="bdesc">Air pinch-to-zoom via MediaPipe hands. Touchless display control.</span>
+          <span class="btag">python · cv</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-abyss" data-label="abyss" style="--x: 62.5%; --y: 76%;">
+        <div class="bubble-content">
+          <span class="bname">abyss</span>
+          <span class="bdesc">3D viewer geometry. Viewer and screen position visualization.</span>
+          <span class="btag">python · cv</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-posetools" data-label="pose-tools" style="--x: 87.5%; --y: 76%;">
+        <div class="bubble-content">
+          <span class="bname">pose-tools</span>
+          <span class="bdesc">Pose tracking library. MediaPipe integration, homography utilities.</span>
+          <span class="btag">python · cv</span>
+        </div>
+      </div>
+
+      <!-- ── Travel / Maps ── -->
+      <div class="bubble" id="b-tripmeup" data-label="trip-me-up" style="--x: 28%; --y: 90%;">
+        <div class="bubble-content">
+          <span class="bname">trip-me-up</span>
+          <span class="bdesc">Trip planner from Google Maps saved lists. Itinerary and distance planning.</span>
+          <span class="btag">python · maps</span>
+        </div>
+      </div>
+
+      <div class="bubble" id="b-placestools" data-label="places-tools" style="--x: 72%; --y: 90%;">
+        <div class="bubble-content">
+          <span class="bname">places-tools</span>
+          <span class="bdesc">Google Maps/Places library. Takeout parsing, place details, geo utils.</span>
+          <span class="btag">python · maps</span>
         </div>
       </div>
 
