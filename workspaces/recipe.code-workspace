@@ -1,0 +1,54 @@
+{
+	"folders": [
+		{
+			"name": "linux-box-cloudflare",
+			"path": ".."
+		},
+		{
+			"name": "repomgr",
+			"path": "../../repomgr"
+		},
+		{
+			"name": "tg-central-hub-bot",
+			"path": "../../tg-central-hub-bot"
+		},
+		{
+			"name": "fastapi-tools",
+			"path": "../../fastapi-tools"
+		},
+		{
+			"name": "llm-core",
+			"path": "../../llm-core"
+		},
+		{
+			"name": "media-downloader",
+			"path": "../../media-downloader"
+		},
+		{
+			"name": "kit-hub",
+			"path": "../../kit-hub"
+		},
+		{
+			"name": "recipamatic",
+			"path": "../../recipamatic"
+		},
+		{
+			"name": "recipinator",
+			"path": "../../recipinator"
+		},
+		{
+			"name": "cookbook",
+			"path": "../../cookbook"
+		},
+		{
+			"name": "python-tools",
+			"path": "../../python-tools"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"vectorable",
+			"vectorstores"
+		]
+	}
+}

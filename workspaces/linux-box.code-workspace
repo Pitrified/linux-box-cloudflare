@@ -2,103 +2,103 @@
 	"folders": [
 		{
 			"name": "linux-box-cloudflare",
-			"path": "."
+			"path": ".."
 		},
 		{
 			"name": "repomgr",
-			"path": "../repomgr"
+			"path": "../../repomgr"
 		},
 		{
 			"name": "tg-central-hub-bot",
-			"path": "../tg-central-hub-bot"
+			"path": "../../tg-central-hub-bot"
 		},
 		{
 			"name": "python-project-template",
-			"path": "../python-project-template"
+			"path": "../../python-project-template"
 		},
 		{
 			"name": "fastapi-tools",
-			"path": "../fastapi-tools"
+			"path": "../../fastapi-tools"
 		},
 		{
 			"name": "llm-core",
-			"path": "../llm-core"
+			"path": "../../llm-core"
 		},
 		{
 			"name": "media-downloader",
-			"path": "../media-downloader"
+			"path": "../../media-downloader"
 		},
 		{
 			"name": "laife",
-			"path": "../laife"
+			"path": "../../laife"
 		},
 		{
 			"name": "kit-hub",
-			"path": "../kit-hub"
+			"path": "../../kit-hub"
 		},
 		{
 			"name": "recipamatic",
-			"path": "../recipamatic"
+			"path": "../../recipamatic"
 		},
 		{
 			"name": "recipinator",
-			"path": "../recipinator"
+			"path": "../../recipinator"
 		},
 		{
 			"name": "cookbook",
-			"path": "../cookbook"
+			"path": "../../cookbook"
 		},
 		{
 			"name": "convo_craft",
-			"path": "../convo_craft"
+			"path": "../../convo_craft"
 		},
 		{
 			"name": "brazilian-bites",
-			"path": "../brazilian-bites"
+			"path": "../../brazilian-bites"
 		},
 		{
 			"name": "worldly-words",
-			"path": "../worldly-words"
+			"path": "../../worldly-words"
 		},
 		{
 			"name": "fala-comigo-ai-tutor",
-			"path": "../fala-comigo-ai-tutor"
+			"path": "../../fala-comigo-ai-tutor"
 		},
 		{
 			"name": "go-accenter",
-			"path": "../go-accenter"
+			"path": "../../go-accenter"
 		},
 		{
 			"name": "trip-me-up",
-			"path": "../trip-me-up"
+			"path": "../../trip-me-up"
 		},
 		{
 			"name": "climbing-wire",
-			"path": "../climbing-wire"
+			"path": "../../climbing-wire"
 		},
 		{
 			"name": "holo-table",
-			"path": "../holo-table"
+			"path": "../../holo-table"
 		},
 		{
 			"name": "abyss",
-			"path": "../abyss"
+			"path": "../../abyss"
 		},
 		{
 			"name": "pose-tools",
-			"path": "../pose-tools"
+			"path": "../../pose-tools"
 		},
 		{
 			"name": "places-tools",
-			"path": "../places-tools"
+			"path": "../../places-tools"
 		},
 		{
 			"name": "lang-tools",
-			"path": "../lang-tools"
+			"path": "../../lang-tools"
 		},
 		{
 			"name": "python-tools",
-			"path": "../python-tools"
+			"path": "../../python-tools"
 		}
 	],
 	"settings": {
