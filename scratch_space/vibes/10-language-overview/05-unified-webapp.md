@@ -136,5 +136,8 @@ Render (following kit-hub/media-downloader patterns):
 ## Open questions
 
 - Should exercise state (current round, guesses so far) be stored server-side (in session/Redis) or client-side (in JS state sent with each request)? Server-side prevents cheating; client-side is simpler.
+  ANSWER: client side is ok
 - How to handle the wordle word list validation (checking if a guess is a valid word)? Needs a fast lookup, probably an in-memory set loaded at startup.
+  ANSWER: wordle set is ~12k words, can be loaded in memory at startup for O(1) validation.
 - Should there be a "daily challenge" mode (like real Wordle) where all users get the same word? Adds social/competitive element.
+  ANSWER: not for MVP
