@@ -1,0 +1,79 @@
+{
+	"folders": [
+		{
+			"name": "linux-box-cloudflare",
+			"path": ".."
+		},
+		{
+			"name": "python-project-template",
+			"path": "../../python-project-template"
+		},
+		{
+			"name": "fastapi-tools",
+			"path": "../../fastapi-tools"
+		},
+		{
+			"name": "llm-core",
+			"path": "../../llm-core"
+		},
+		{
+			"name": "media-downloader",
+			"path": "../../media-downloader"
+		},
+		{
+			"name": "trip-me-up",
+			"path": "../../trip-me-up"
+		},
+		{
+			"name": "places-tools",
+			"path": "../../places-tools"
+		},
+		{
+			"name": "lang-tools",
+			"path": "../../lang-tools"
+		},
+		{
+			"name": "python-tools",
+			"path": "../../python-tools"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"vectorable",
+			"vectorstores"
+		],
+		"files.exclude": {
+			"**/.venv": true,
+			"**/__pycache__": true,
+			"**/.ruff_cache": true,
+			"**/.pytest_cache": true,
+			"**/.mypy_cache": true,
+			"**/node_modules": true,
+			"**/htmlcov": true
+		},
+		"search.exclude": {
+			"**/.venv/**": true,
+			"**/__pycache__/**": true,
+			"**/.ruff_cache/**": true,
+			"**/.pytest_cache/**": true,
+			"**/.mypy_cache/**": true,
+			"**/node_modules/**": true,
+			"**/cache/**": true,
+			"**/site/**": true,
+			"**/htmlcov/**": true,
+			"**/build/**": true,
+			"**/dist/**": true
+		},
+		"files.watcherExclude": {
+			"**/.venv/**": true,
+			"**/__pycache__/**": true,
+			"**/.ruff_cache/**": true,
+			"**/.pytest_cache/**": true,
+			"**/node_modules/**": true,
+			"**/cache/**": true,
+			"**/site/**": true,
+			"**/build/**": true,
+			"**/dist/**": true
+		}
+	}
+}
