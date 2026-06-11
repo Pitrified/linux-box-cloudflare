@@ -1,13 +1,14 @@
 # dotfiles update
 
+repo
+/home/pmn/dotfiles
+has some machinery to create symlinks pointing to configs in the repo,
+so that the actual config files are in the repo and git can track them,
+and in all machines the setup is the same.
+
 ## repomgr
 
 move repos.toml (or create a new one)
-from this repo to `~/dotfiles/repomgr/`
+from this repo `linux-box-cloudflare` to `~/dotfiles/repomgr/` or whatever
 
-## claude
-
-claude settings should be in dotfiles as well
-but we need to check
-1. if there are any secrets in there first
-2. how often is that file updated and by whom
+status: deferred, we need to decide some more things
