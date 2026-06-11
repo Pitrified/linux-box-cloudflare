@@ -152,5 +152,3 @@ personalization. Managed with custom python script.
 Home for the blog and other static content. A more traditional static site for blogging and documentation and portfolio and whatnot.
 
 **`repomgr`** - Repository management tool. Helps with organizing and maintaining multiple repositories.
-
----

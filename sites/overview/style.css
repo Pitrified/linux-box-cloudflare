@@ -15,14 +15,16 @@
   --bright:  #e8ede8;
   --accent:  #5af078;
 
-  /* group palette */
-  --cg-ecosystem: #5af078;  /* bright green  - the whole ecosystem */
-  --cg-flagship:  #3ab8b8;  /* teal          - main apps */
-  --cg-lib:       #7a5af0;  /* violet        - core libraries */
-  --cg-recipe:    #f07a5a;  /* orange        - recipe domain */
-  --cg-lang:      #5a8af0;  /* blue          - language learning */
-  --cg-cv:        #f05ab8;  /* pink          - computer vision */
-  --cg-travel:    #5adcf0;  /* cyan          - travel / maps */
+  /* row palette - one colour per group/row */
+  --cg-ai:        #3ab8b8;  /* teal    - AI / Simulation */
+  --cg-recipe:    #f07a5a;  /* orange  - Recipe Domain */
+  --cg-lang:      #5a8af0;  /* blue    - Language Learning */
+  --cg-travel:    #5adcf0;  /* cyan    - Travel / Maps */
+  --cg-xr:        #f05ab8;  /* pink    - Extended Reality */
+  --cg-epub:      #f0c95a;  /* gold    - Epub handling */
+  --cg-framework: #7a5af0;  /* violet  - Framework / Tooling */
+  --cg-bots:      #b8f05a;  /* lime    - Interfaces / Bots */
+  --cg-infra:     #5af078;  /* green   - Infrastructure */
 
   --bubble-size: 120px;
 }
@@ -106,9 +108,9 @@ h1 span { color: var(--accent); }
 /* ── Bubble stage ── */
 .bubble-stage {
   position: relative;
-  height: 1000px;
+  height: 1400px;
   width: 100%;
-  max-width: 700px;
+  max-width: 780px;
 }
 
 /* ── Individual bubble ── */
@@ -137,37 +139,44 @@ h1 span { color: var(--accent); }
   z-index: 1;
 }
 
-/* per-bubble accent colours, grouped by domain */
-/* ecosystem */
-#b-ecosystem       { --accent-c: var(--cg-ecosystem); box-shadow: 0 0 0 1px var(--cg-ecosystem); }
-/* flagship apps */
-#b-laife           { --accent-c: var(--cg-flagship);  box-shadow: 0 0 0 1px var(--cg-flagship); }
-#b-kithub          { --accent-c: var(--cg-flagship);  box-shadow: 0 0 0 1px var(--cg-flagship); }
-#b-tgbot           { --accent-c: var(--cg-flagship);  box-shadow: 0 0 0 1px var(--cg-flagship); }
-/* core libraries */
-#b-llmcore         { --accent-c: var(--cg-lib); box-shadow: 0 0 0 1px var(--cg-lib); }
-#b-fastapitools    { --accent-c: var(--cg-lib); box-shadow: 0 0 0 1px var(--cg-lib); }
-#b-mediadownloader { --accent-c: var(--cg-lib); box-shadow: 0 0 0 1px var(--cg-lib); }
-#b-template        { --accent-c: var(--cg-lib); box-shadow: 0 0 0 1px var(--cg-lib); }
-#b-repomgr         { --accent-c: var(--cg-lib); box-shadow: 0 0 0 1px var(--cg-lib); }
-/* recipe domain */
+/* per-bubble accent colours, one colour per row/group */
+/* AI / Simulation */
+#b-laife           { --accent-c: var(--cg-ai); box-shadow: 0 0 0 1px var(--cg-ai); }
+/* Recipe Domain */
+#b-kithub          { --accent-c: var(--cg-recipe); box-shadow: 0 0 0 1px var(--cg-recipe); }
 #b-recipamatic     { --accent-c: var(--cg-recipe); box-shadow: 0 0 0 1px var(--cg-recipe); }
 #b-recipinator     { --accent-c: var(--cg-recipe); box-shadow: 0 0 0 1px var(--cg-recipe); }
 #b-cookbook        { --accent-c: var(--cg-recipe); box-shadow: 0 0 0 1px var(--cg-recipe); }
-/* language learning */
+/* Language Learning */
+#b-langtools       { --accent-c: var(--cg-lang); box-shadow: 0 0 0 1px var(--cg-lang); }
 #b-convocraft      { --accent-c: var(--cg-lang); box-shadow: 0 0 0 1px var(--cg-lang); }
 #b-brazilianbites  { --accent-c: var(--cg-lang); box-shadow: 0 0 0 1px var(--cg-lang); }
 #b-worldlywords    { --accent-c: var(--cg-lang); box-shadow: 0 0 0 1px var(--cg-lang); }
 #b-falacomigo      { --accent-c: var(--cg-lang); box-shadow: 0 0 0 1px var(--cg-lang); }
 #b-goaccenter      { --accent-c: var(--cg-lang); box-shadow: 0 0 0 1px var(--cg-lang); }
-/* computer vision */
-#b-climbingwire    { --accent-c: var(--cg-cv); box-shadow: 0 0 0 1px var(--cg-cv); }
-#b-holotable       { --accent-c: var(--cg-cv); box-shadow: 0 0 0 1px var(--cg-cv); }
-#b-abyss           { --accent-c: var(--cg-cv); box-shadow: 0 0 0 1px var(--cg-cv); }
-#b-posetools       { --accent-c: var(--cg-cv); box-shadow: 0 0 0 1px var(--cg-cv); }
-/* travel / maps */
-#b-tripmeup        { --accent-c: var(--cg-travel); box-shadow: 0 0 0 1px var(--cg-travel); }
+/* Travel / Maps */
 #b-placestools     { --accent-c: var(--cg-travel); box-shadow: 0 0 0 1px var(--cg-travel); }
+#b-tripmeup        { --accent-c: var(--cg-travel); box-shadow: 0 0 0 1px var(--cg-travel); }
+/* Extended Reality */
+#b-posetools       { --accent-c: var(--cg-xr); box-shadow: 0 0 0 1px var(--cg-xr); }
+#b-climbingwire    { --accent-c: var(--cg-xr); box-shadow: 0 0 0 1px var(--cg-xr); }
+#b-holotable       { --accent-c: var(--cg-xr); box-shadow: 0 0 0 1px var(--cg-xr); }
+#b-abyss           { --accent-c: var(--cg-xr); box-shadow: 0 0 0 1px var(--cg-xr); }
+/* Epub handling */
+#b-interleaver     { --accent-c: var(--cg-epub); box-shadow: 0 0 0 1px var(--cg-epub); }
+/* Framework / Tooling */
+#b-llmcore         { --accent-c: var(--cg-framework); box-shadow: 0 0 0 1px var(--cg-framework); }
+#b-fastapitools    { --accent-c: var(--cg-framework); box-shadow: 0 0 0 1px var(--cg-framework); }
+#b-mediadownloader { --accent-c: var(--cg-framework); box-shadow: 0 0 0 1px var(--cg-framework); }
+#b-template        { --accent-c: var(--cg-framework); box-shadow: 0 0 0 1px var(--cg-framework); }
+#b-pythontools     { --accent-c: var(--cg-framework); box-shadow: 0 0 0 1px var(--cg-framework); }
+/* Interfaces / Bots */
+#b-tgbot           { --accent-c: var(--cg-bots); box-shadow: 0 0 0 1px var(--cg-bots); }
+/* Infrastructure */
+#b-ecosystem       { --accent-c: var(--cg-infra); box-shadow: 0 0 0 1px var(--cg-infra); }
+#b-dotfiles        { --accent-c: var(--cg-infra); box-shadow: 0 0 0 1px var(--cg-infra); }
+#b-repomgr         { --accent-c: var(--cg-infra); box-shadow: 0 0 0 1px var(--cg-infra); }
+#b-githubio        { --accent-c: var(--cg-infra); box-shadow: 0 0 0 1px var(--cg-infra); }
 
 /* ── Content inside bubble (hidden by default) ── */
 .bubble-content {
@@ -209,7 +218,7 @@ h1 span { color: var(--accent); }
 
 /* ── Hover: expand + reveal ── */
 .bubble:hover {
-  transform: translate(-50%, -50%) scale(1.75);
+  transform: translate(-50%, -50%) scale(2.4);
   box-shadow:
     0 0 0 1px var(--accent-c),
     0 8px 30px rgba(0,0,0,0.5);
@@ -218,7 +227,7 @@ h1 span { color: var(--accent); }
 
 .bubble:hover .bubble-content {
   opacity: 1;
-  transform: scale(1);
+  transform: scale(0.65);
 }
 
 /* ── Dot label (visible at rest) ── */
