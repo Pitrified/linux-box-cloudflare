@@ -148,6 +148,11 @@ remote = "git@github.com:Pitrified/lang-tools.git"
 roles  = ["consumer"]
 
 [[repo]]
+name   = "go-accenter"
+remote = "git@github.com:Pitrified/go-accenter.git"
+roles  = ["consumer"]
+
+[[repo]]
 name   = "python-tools"
 remote = "git@github.com:Pitrified/python-tools.git"
 roles  = ["consumer"]

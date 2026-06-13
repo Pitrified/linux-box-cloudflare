@@ -51,10 +51,22 @@
 		{
 			"name": "python-tools",
 			"path": "../../python-tools"
+		},
+		{
+			"path": "../../go-accenter"
 		}
 	],
 	"settings": {
 		"cSpell.words": [
+			"dedup",
+			"frontmatter",
+			"kaikki",
+			"makefiles",
+			"materialises",
+			"sdist",
+			"sdists",
+			"setuptools",
+			"Stabilise",
 			"vectorable",
 			"vectorstores"
 		],
