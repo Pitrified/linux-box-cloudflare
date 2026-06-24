@@ -24,6 +24,10 @@
 			"name": "dotfiles",
 			"path": "../../../dotfiles"
 		},
+		{
+			"name": "bootstrap",
+			"path": "../../../bootstrap"
+		}
 	],
 	"settings": {
 		"cSpell.words": [
