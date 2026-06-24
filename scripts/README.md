@@ -50,3 +50,28 @@ prompting.
 sudo systemctl restart cloudflared
 sudo systemctl restart nginx
 ```
+
+## setup-disposable-box.sh
+
+Box-specific setup, kept separate from `setup-symlinks.sh`.
+
+`setup-symlinks.sh` wires up the `/etc` service configs every box in the ecosystem needs.
+This script instead installs the Claude rules that describe a **disposable, no-secret
+sandbox** box (`configs/claude/rules/local-box.md`). That assumption does not hold for
+boxes that store secrets, so it is opt-in and lives in its own script.
+
+Run as your **normal user** (not with sudo): the symlink lands in `$HOME/.claude`.
+
+**Usage:**
+
+```bash
+bash scripts/setup-disposable-box.sh
+```
+
+**What it does:**
+
+| Target | Source in repo |
+| --- | --- |
+| `~/.claude/rules/local-box.md` | `configs/claude/rules/local-box.md` |
+
+**Re-running is safe** - `ln -sf` overwrites the existing symlink without prompting.
