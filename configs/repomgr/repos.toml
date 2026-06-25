@@ -4,11 +4,15 @@
 #   repomgr --config ~/repos/linux-box-cloudflare/configs/repomgr/repos.toml status
 #
 # state_file is resolved relative to this file's parent directory.
+# Clone URLs are derived from transport/host/owner + each repo's name.
 
 [settings]
 base_path        = "~/repos"
 default_test_cmd = "uv run pytest"
 state_file       = "./repos.state.json"
+owner            = "Pitrified"
+host             = "github.com"
+transport        = "ssh"
 
 # ---------------------------------------------------------------------------
 # Sources - produce versioned tags consumed by other repos
@@ -16,20 +20,17 @@ state_file       = "./repos.state.json"
 
 [[repo]]
 name       = "llm-core"
-remote     = "git@github.com:Pitrified/llm-core.git"
 roles      = ["source"]
 auto_merge = true
 
 [[repo]]
 name       = "fastapi-tools"
-remote     = "git@github.com:Pitrified/fastapi-tools.git"
 roles      = ["source"]
 auto_merge = true
 
 # Source + consumer: depends on llm-core + fastapi-tools; consumed by kit-hub
 [[repo]]
 name       = "media-downloader"
-remote     = "git@github.com:Pitrified/media-downloader.git"
 roles      = ["source", "consumer"]
 auto_merge = true
 
@@ -39,12 +40,10 @@ auto_merge = true
 
 [[repo]]
 name   = "laife"
-remote = "git@github.com:Pitrified/laife.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "kit-hub"
-remote = "git@github.com:Pitrified/kit-hub.git"
 roles  = ["consumer"]
 
 # ---------------------------------------------------------------------------
@@ -53,116 +52,95 @@ roles  = ["consumer"]
 
 [[repo]]
 name   = "linux-box-cloudflare"
-remote = "git@github.com:Pitrified/linux-box-cloudflare.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "repomgr"
-remote = "git@github.com:Pitrified/repomgr.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "tg-central-hub-bot"
-remote = "git@github.com:Pitrified/tg-central-hub-bot.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "python-project-template"
-remote = "git@github.com:Pitrified/python-project-template.git"
 roles  = ["consumer"]
 
 [[repo]]
-name   = "recipamatic"
-remote     = "git@github.com:Pitrified/recipamatic.git"
+name       = "recipamatic"
 roles      = ["consumer"]
 test_cmd   = "cd py && poetry run pytest"
 
 [[repo]]
 name   = "recipinator"
-remote = "git@github.com:Pitrified/recipinator.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "cookbook"
-remote = "git@github.com:Pitrified/cookbook.git"
 roles  = ["consumer"]
 
+# Local name uses an underscore; the GitHub repo uses a hyphen.
 [[repo]]
-name   = "convo_craft"
-remote = "git@github.com:Pitrified/convo-craft.git"
-roles  = ["consumer"]
+name      = "convo_craft"
+repo_name = "convo-craft"
+roles     = ["consumer"]
 
 [[repo]]
 name   = "brazilian-bites"
-remote = "git@github.com:Pitrified/brazilian-bites.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "worldly-words"
-remote = "git@github.com:Pitrified/worldly-words.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "fala-comigo-ai-tutor"
-remote = "git@github.com:Pitrified/fala-comigo-ai-tutor.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "go-accenter"
-remote = "git@github.com:Pitrified/go-accenter.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "trip-me-up"
-remote = "git@github.com:Pitrified/trip-me-up.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "climbing-wire"
-remote = "git@github.com:Pitrified/climbing-wire.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "holo-table"
-remote = "git@github.com:Pitrified/holo-table.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "abyss"
-remote = "git@github.com:Pitrified/abyss.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "pose-tools"
-remote = "git@github.com:Pitrified/pose-tools.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "places-tools"
-remote = "git@github.com:Pitrified/places-tools.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "lang-tools"
-remote = "git@github.com:Pitrified/lang-tools.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "lang-tutor"
-remote = "git@github.com:Pitrified/lang-tutor.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "python-tools"
-remote = "git@github.com:Pitrified/python-tools.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "Pitrified"
-remote = "git@github.com:Pitrified/Pitrified.git"
 roles  = ["consumer"]
 
 [[repo]]
 name   = "pitrified.github.io"
-remote = "git@github.com:Pitrified/pitrified.github.io.git"
 roles  = ["consumer"]

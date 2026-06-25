@@ -98,7 +98,7 @@ Standalone repos (`linux-box-cloudflare`, `repomgr`, `tg-central-hub-bot`, `pyth
 
 ## SSH remote requirement
 
-All remotes are configured with SSH (`git@github.com:...`). Verify that an SSH key for `github.com` is loaded:
+This workspace sets `transport = "ssh"` in `[settings]`, so repomgr derives SSH clone URLs (`git@github.com:...`). Verify that an SSH key for `github.com` is loaded:
 
 ```bash
 ssh -T git@github.com
@@ -120,9 +120,13 @@ git remote set-url origin git@github.com:Pitrified/<repo-name>.git
 ```toml
 [[repo]]
 name   = "new-repo"
-remote = "git@github.com:Pitrified/new-repo.git"
 roles  = ["consumer"]
 ```
+
+The clone URL is derived from the global `[settings]` `owner`/`host`/`transport`
+and the repo `name` - no `remote` URL is set per repo. Add `owner = "..."` to
+the entry only if it lives under a different owner, or `repo_name = "..."` if
+the GitHub repo name differs from the local `name`.
 
 2. Clone it if not already on disk:
 
