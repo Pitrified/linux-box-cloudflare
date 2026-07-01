@@ -17,8 +17,8 @@ which lays out the same stack in 7 phases.
   Phase 2 of the guide (domain registration, nameservers, edge settings) is already done; we reuse it.
 
 - **Fresh tunnel, not the old one.**
-  Run `cloudflared tunnel create` on this box to get a new UUID + credentials JSON,
-  rather than migrating the old tunnel's creds.
+  Run `cloudflared tunnel create` on `g7` (see credentials handling below) to get a new UUID +
+  credentials JSON, rather than migrating the old tunnel's creds.
   Cleanest for a new box; a tunnel should only be run from one box at a time.
   Consequence: `configs/cloudflared/config.yml` must be updated - the tracked file still carries the
   old UUID `68aa8138-1812-446c-9faf-3760c42058d4` on both the `tunnel:` and `credentials-file:` lines.
@@ -44,9 +44,11 @@ which lays out the same stack in 7 phases.
   Three distinct Cloudflare credentials, treated by sensitivity:
   - **`cert.pem` (account/zone-scoped, most sensitive)** - created by `cloudflared tunnel login`.
     Needed **only at management time** (`tunnel create` / `route dns` / `delete` / `list`),
-    **never** read by `tunnel run`. **Decision: never persist it on this box.**
-    Either run the management commands from a trusted machine (laptop) and copy only the
-    resulting `<UUID>.json` over, or import it from the password manager, use it, then `shred -u` it.
+    **never** read by `tunnel run`. **Decision: it never lands on this box.**
+    Run every management command (`login`, `create`, `route dns`) from the trusted machine
+    (laptop, `g7`), where `cert.pem` lives in `~/.cloudflared/`, then copy only the resulting
+    `<UUID>.json` to this box over Tailscale SSH (`scp`). The guide must state, per command,
+    which box it runs on (`g7` for management, `pmn-14g4` for install/service/config).
   - **`<UUID>.json` (per-tunnel, revocable)** - created by `tunnel create`, read by the service on
     every boot, so it must live on the box: `/etc/cloudflared/<UUID>.json`, `root:root`, `chmod 600`,
     **never committed**. Acceptable on a low-secret box because it is scoped to this one tunnel - if
@@ -54,8 +56,9 @@ which lays out the same stack in 7 phases.
     the password manager as backup. (Token-model / dashboard-managed tunnels were considered but
     rejected: they trade our tracked `config.yml` workflow for dashboard-managed ingress.)
   - **API token** - not used; the CLI path needs no Terraform/REST token.
-  - Consequence for Phase 4: the user provides `cert.pem` from their external password manager at
-    setup time only; **skip the guide's copy of `cert.pem` into `/etc/cloudflared/`** - the running
+  - Consequence for Phase 4: `cert.pem` stays on `g7` and is never copied to this box.
+    `tunnel login` / `create` / `route dns` all run on `g7`; only `<UUID>.json` is `scp`'d to
+    `pmn-14g4`. **Skip the guide's copy of `cert.pem` into `/etc/cloudflared/`** - the running
     service needs only the JSON + `config.yml`.
 
 ## Scope for now
