@@ -31,11 +31,11 @@ guide divergences to fold back later in [`02-guide-deltas.md`](02-guide-deltas.m
 | -- | ---------------------------------- | --------------------- | -------- |
 | 1  | Local hardening (partial)          | [`03-phase1-hardening.md`](03-phase1-hardening.md) | planned  |
 | 2  | Domain + Cloudflare                | n/a - done previously | done     |
-| 3  | nginx landing page                 | _sub-plan TBD_        | planned  |
-| 4  | cloudflared + fresh tunnel + DNS   | _sub-plan TBD_        | planned  |
-| 5  | Zero Trust (Google auth) + HSTS    | _sub-plan TBD_        | planned  |
+| 3  | nginx landing page                 | [`04-phase3-nginx.md`](04-phase3-nginx.md) | planned  |
+| 4  | cloudflared + fresh tunnel + DNS   | [`05-phase4-tunnel.md`](05-phase4-tunnel.md) | planned  |
+| 5  | Zero Trust (Google auth) + HSTS    | [`06-phase5-zero-trust.md`](06-phase5-zero-trust.md) | planned  |
 | 6  | SSH over tunnel                    | n/a                   | discarded |
-| 7  | Telegram webhook                   | _sub-plan TBD_        | planned  |
+| 7  | Telegram webhook                   | [`07-phase7-telegram.md`](07-phase7-telegram.md) | draft    |
 
 Status values: draft / planned / in progress / done / superseded / discarded.
 Phase 6 discarded: box uses Tailscale SSH; openssh not installed (see [`00-start.md`](00-start.md)).
@@ -52,3 +52,4 @@ Append-only. Newest at the bottom.
 - 2026-07-01 : kept `docs/01_box_setup.md` generic; captured every box-vs-guide divergence in [`02-guide-deltas.md`](02-guide-deltas.md) so the guide can be updated later from a checklist. Guide-gap rows to fold back: `--overwrite-dns`, symlink-not-copy `config.yml`, `cert.pem` is management-only, HSTS re-use note, Bot Fight Mode/WAF vs webhook.
 - 2026-07-02 : security audit of the repo ([`../19-security-audit/00-assessment.md`](../19-security-audit/00-assessment.md)); quick wins applied: nginx binds loopback, `ssh.*` ingress removed from `config.yml`, `setup-symlinks.sh` replaced by `deploy-configs.sh` (root-owned copies + diff gate), guide updated (apt-repo cloudflared install, webhook `secret_token`, decommission section, Access-coverage rule). Plan updated: hardening before repoint (fail2ban skipped), old tunnel deletion added to Phase 4, Phase 5 immediately after Phase 4. Deltas 4 and 5 closed.
 - 2026-07-02 : wrote the Phase 1 sub-plan ([`03-phase1-hardening.md`](03-phase1-hardening.md)): unattended-upgrades + ufw (zero inbound rules, Tailscale lockout guard) + sysctl via `deploy-configs.sh`, all before the Phase 4 repoint; fail2ban and sshd hardening explicitly out of scope. Status planned, execution not started.
+- 2026-07-02 : planned all remaining phases. Phase 3 ([`04-phase3-nginx.md`](04-phase3-nginx.md)): loopback-only nginx + negative test from g7. Phase 4 ([`05-phase4-tunnel.md`](05-phase4-tunnel.md)): apt-repo install, management on g7, config edit before deploy, `--overwrite-dns` repoint, old-tunnel delete + backup rotation. Phase 5 ([`06-phase5-zero-trust.md`](06-phase5-zero-trust.md)): Access over wildcard + apex, then HSTS re-enable, immediately after Phase 4. Phase 7 ([`07-phase7-telegram.md`](07-phase7-telegram.md)) stays `draft` until a bot backend is decided. Execution order: 1 -> 3 -> 4 -> 5; 7 deferred.
