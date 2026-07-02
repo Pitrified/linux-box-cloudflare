@@ -5,8 +5,9 @@
 #
 # deploy-configs.sh wires up the /etc service configs that any linux box in
 # this ecosystem needs. This script instead installs the Claude rules that
-# describe a *disposable, no-secret sandbox* box (configs/claude/rules/local-box.md).
-# That assumption does not hold for boxes that store secrets,
+# describe a *low-secret sandbox* box (configs/claude/rules/local-box.md):
+# no user-accessible secrets, possibly root-only revocable service creds.
+# That assumption does not hold for boxes that store user-level secrets,
 # so it lives in its own script and is opt-in.
 #
 # Runs as the normal user (no sudo) - the symlink lands in $HOME/.claude.

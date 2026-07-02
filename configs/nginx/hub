@@ -6,6 +6,14 @@ server {
     root /var/www/hub;
     index index.html;
 
+    server_tokens off;
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    # site is fully self-contained (fonts and CSS self-hosted)
+    add_header Content-Security-Policy "default-src 'self'" always;
+
     location / {
         try_files $uri $uri/ =404;
     }

@@ -64,9 +64,10 @@ sudo sysctl --system   # for sysctl changes
 Box-specific setup, kept separate from `deploy-configs.sh`.
 
 `deploy-configs.sh` wires up the `/etc` service configs every box in the ecosystem needs.
-This script instead installs the Claude rules that describe a **disposable, no-secret
-sandbox** box (`configs/claude/rules/local-box.md`). That assumption does not hold for
-boxes that store secrets, so it is opt-in and lives in its own script.
+This script instead installs the Claude rules that describe a **low-secret sandbox** box
+(`configs/claude/rules/local-box.md`): no user-accessible secrets, possibly root-only
+revocable service credentials (like the tunnel JSON). That assumption does not hold for
+boxes that store user-level secrets, so it is opt-in and lives in its own script.
 
 Run as your **normal user** (not with sudo): the symlink lands in `$HOME/.claude`.
 

@@ -5,7 +5,9 @@ Auto-loaded into every session on this host, for every project.
 
 ## What this box is
 
-- Disposable sandbox: no secrets stored, no browser logins. Reached over SSH + Tailscale from VS Code or via remote controlled claude sessions.
+- Low-secret sandbox: no user-accessible secrets, no browser logins. Reached over SSH + Tailscale from VS Code or via remote controlled claude sessions.
+- The box may hold **root-only, revocable service credentials** (e.g. the Cloudflare tunnel JSON at `/etc/cloudflared/<UUID>.json`, root:600). You run unprivileged and cannot read them; never try to work around that, and never copy, echo, or commit anything from `/etc/cloudflared/`. If such a credential is suspected compromised, the response is to rotate it (delete/recreate the tunnel), not to investigate it in place.
+- `/etc` service configs are root-owned **copies** deployed from this repo via `scripts/deploy-configs.sh` (a diff is shown at deploy time). Editing the repo file changes nothing live until the user runs the deploy script with sudo - do not expect edits under `configs/` to take effect on their own.
 - Permissions run in bypass mode (see `~/.claude/settings.local.json`): tool prompts are skipped, so you have broad latitude to run commands and edit files.
 
 ## Trade that latitude for planning

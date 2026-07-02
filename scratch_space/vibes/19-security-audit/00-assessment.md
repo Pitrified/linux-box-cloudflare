@@ -299,5 +299,16 @@ Worth keeping and not diluting:
   failure, and requires root explicitly.
 - Guide nits from L4 applied: `Protocol 2` dropped, `cert.pem` copy step deleted,
   unattended-upgrades verification added.
-- Still open: M4 (local-box.md trust level), M2's JWT validation, L1 (public recon surface),
-  L2 (SHA-pin actions), L3 (nginx headers, self-hosted fonts), L5 (backup hygiene at rotation).
+- **M4 resolved** (second pass, same day): `local-box.md` reworded from "no secrets" to
+  "low-secret" - root-only revocable service creds may exist, never touch `/etc/cloudflared/`,
+  configs deploy as root-owned copies. `setup-disposable-box.sh` and `scripts/README.md`
+  wording aligned.
+- **L2 resolved**: the four actions in `deploy-site-overview.yml` pinned to commit SHAs
+  (tag noted in a comment).
+- **L3 resolved**: nginx hub config gained `server_tokens off`, `nosniff`, `X-Frame-Options`,
+  `Referrer-Policy`, and `Content-Security-Policy: default-src 'self'`; landing page fonts
+  self-hosted (`sites/landing/fonts/`, three latin woff2 files) and the Google Fonts links
+  removed, making the page fully self-contained.
+- Still open: M2's backend JWT validation (future `fastapi-tools` work), L1 (public recon
+  surface - a standing acceptance decision, not a fix), L5 (backup hygiene at rotation -
+  now documented in the guide's decommission section).
