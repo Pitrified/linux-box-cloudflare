@@ -20,8 +20,11 @@ Plan inside the repo: use its `scratch/` or `plans/` folder, creating `plans/` i
 
 Examples: installing toolchains/SDKs (flutter, node, rust), global package installs, editing shell rc / PATH / systemd / cron, or anything writing outside a repo.
 
-Before acting, write a short note to `~/repos/plans/<YYYY-MM-DD>-<NN>-<slug>.md` covering
-(`<NN>` is a zero-padded per-day sequence: `00` for the day's first note, then `01`, `02`, ...; take `max + 1` of that date's existing notes):
+Before acting, write a short note to
+`~/repos/plans/<YYYY-MM-DD>_<NN>_<slug_feature_name>.md`
+(`<NN>` is a zero-padded per-day sequence: `00` for the day's first note, then `01`, `02`, ...;
+take `max + 1` of that date's existing notes)
+covering:
 
 - **Goal** - one line.
 - **Decisions** - the choices that are not obvious: which version, install method (apt / snap / official script / asdf / ...), install location, what touches PATH or shell rc.
@@ -43,4 +46,5 @@ The "unambiguous" allowance governs whether to pause for confirmation, never whe
 
 ## Plans folder
 
-`~/repos/plans/` is box-level scratch for the above - a local git repo, committed for history but never pushed (no remote). Treat old notes as disposable history, not authoritative state.
+`~/repos/plans/` is box-level scratch for the above - a git repo, committed for history.
+Treat old notes as disposable history, not authoritative state.
