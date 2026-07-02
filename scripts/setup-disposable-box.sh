@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # scripts/setup-disposable-box.sh
 #
-# Box-specific setup, separate from setup-symlinks.sh.
+# Box-specific setup, separate from deploy-configs.sh.
 #
-# setup-symlinks.sh wires up the /etc service configs that any linux box in
+# deploy-configs.sh wires up the /etc service configs that any linux box in
 # this ecosystem needs. This script instead installs the Claude rules that
 # describe a *disposable, no-secret sandbox* box (configs/claude/rules/local-box.md).
 # That assumption does not hold for boxes that store secrets,

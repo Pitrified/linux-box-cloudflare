@@ -1,5 +1,6 @@
 server {
-    listen 8090;
+    # loopback only: traffic must arrive via the cloudflared tunnel, never the LAN
+    listen 127.0.0.1:8090;
     server_name localhost;
 
     root /var/www/hub;

@@ -15,6 +15,16 @@ guide divergences to fold back later in [`02-guide-deltas.md`](02-guide-deltas.m
 - **HSTS:** check whether it is already enabled at the edge; if so disable before the repoint and re-enable after Phase 4 (once HTTPS works end-to-end).
 - **Credentials (box = low-secret):** account `cert.pem` **never lands on the box** - all management (`login`/`create`/`route dns`) runs on the trusted laptop `g7`, and only the resulting `<UUID>.json` is `scp`'d over. That JSON lives at `/etc/cloudflared/`, `root:600`, never committed; revocable. `config.yml` is symlinked from the repo (not copied); skip the guide's `cert.pem` copy. Details in [`00-start.md`](00-start.md).
 
+- **Security audit fold-in (2026-07-02,** [`../19-security-audit/00-assessment.md`](../19-security-audit/00-assessment.md)**):**
+  Phase 1 (unattended-upgrades + ufw, skip fail2ban) runs **before** the Phase 4 DNS repoint, not after.
+  Phase 5 (Access) runs **immediately** after Phase 4 - no ingress hostname without Access coverage.
+  Phase 4 additions: edit `config.yml` (new UUID; `ssh.*` already removed) **before** running
+  `deploy-configs.sh`; install cloudflared from the apt repo; after cutover, `cloudflared tunnel delete`
+  the old tunnel `68aa8138...` from `g7` (revokes its creds), remove its password-manager backup,
+  wipe the old disk if it still exists. All backends bind `127.0.0.1`.
+  `/etc` configs are now deployed as root-owned copies via `scripts/deploy-configs.sh`
+  (replaces `setup-symlinks.sh`); treat `git pull` + redeploy as a reviewed config change.
+
 ## Phases
 
 | #  | Phase                              | Plan                  | Status   |
@@ -40,3 +50,4 @@ Append-only. Newest at the bottom.
 - 2026-06-25 : added credentials-handling decision (low-secret box): account `cert.pem` never persisted on box (user-provided from password manager, management-only); per-tunnel JSON on box at `/etc/cloudflared` root:600; skip the cert.pem copy in Phase 4.
 - 2026-07-01 : reconciled decisions after the old box was retired. cert.pem management fixed to run on the trusted laptop `g7` (never on box; only `<UUID>.json` `scp`'d over). DNS repoint needs `route dns --overwrite-dns` over the stale records. HSTS may be pre-enabled at the edge - disable before the repoint, re-enable after Phase 4. Recorded pitfalls in [`01-assessment.md`](01-assessment.md): `config.yml` is symlinked not copied; delete stale `ssh.*`/`entries.*` DNS records; Bot Fight Mode / WAF can block the Telegram webhook (Phase 7).
 - 2026-07-01 : kept `docs/01_box_setup.md` generic; captured every box-vs-guide divergence in [`02-guide-deltas.md`](02-guide-deltas.md) so the guide can be updated later from a checklist. Guide-gap rows to fold back: `--overwrite-dns`, symlink-not-copy `config.yml`, `cert.pem` is management-only, HSTS re-use note, Bot Fight Mode/WAF vs webhook.
+- 2026-07-02 : security audit of the repo ([`../19-security-audit/00-assessment.md`](../19-security-audit/00-assessment.md)); quick wins applied: nginx binds loopback, `ssh.*` ingress removed from `config.yml`, `setup-symlinks.sh` replaced by `deploy-configs.sh` (root-owned copies + diff gate), guide updated (apt-repo cloudflared install, webhook `secret_token`, decommission section, Access-coverage rule). Plan updated: hardening before repoint (fail2ban skipped), old tunnel deletion added to Phase 4, Phase 5 immediately after Phase 4. Deltas 4 and 5 closed.

@@ -16,6 +16,10 @@ Before connecting your machine to the Cloudflare edge, secure the local host. Th
 sudo apt update && sudo apt upgrade -y
 # Enable automatic security updates (Debian/Ubuntu)
 sudo apt install unattended-upgrades -y
+
+# Verify the periodic job is actually enabled (installing the package alone does not prove it)
+systemctl status unattended-upgrades --no-pager
+apt-config dump APT::Periodic::Unattended-Upgrade   # should be "1"
 ```
 
 **2. Enable Ubuntu Pro (Free Extended Security)**
@@ -57,7 +61,6 @@ ClientAliveInterval 300
 ClientAliveCountMax 2
 X11Forwarding no
 AllowTcpForwarding no
-Protocol 2
 ```
 
 Restart the SSH daemon:
@@ -192,14 +195,18 @@ sudo ln -sfn /path/to/linux-box-cloudflare/sites/landing /var/www/hub
 Or run the provided script (see `scripts/README.md`) which resolves the repo path automatically:
 
 ```bash
-sudo bash scripts/setup-symlinks.sh
+sudo bash scripts/deploy-configs.sh
 ```
 
 The landing page lives in `sites/landing/` of the [linux-box-cloudflare](https://github.com/Pitrified/linux-box-cloudflare) repo.
 
 **3. Create an nginx Site Config**
 
-We use port `8090` to avoid conflicts with nginx's default port 80 listener.
+We use port `8090` to avoid conflicts with nginx's default port 80 listener, and bind
+**loopback only**: the tunnel connects from localhost, so nothing on the LAN should be
+able to reach the site directly and bypass the Cloudflare edge (WAF, Access policies).
+This rule applies to **every tunnelled backend**, not just nginx - bind apps to
+`127.0.0.1`, never `0.0.0.0`.
 
 ```bash
 sudo nano /etc/nginx/sites-available/hub
@@ -207,7 +214,7 @@ sudo nano /etc/nginx/sites-available/hub
 
 ```nginx
 server {
-    listen 8090;
+    listen 127.0.0.1:8090;
     server_name localhost;
 
     root /var/www/hub;
@@ -241,10 +248,19 @@ All traffic - the landing page, apps, and the bot - is routed through a single C
 
 **1. Install `cloudflared`**
 
+Install from Cloudflare's apt repository, not by downloading the release binary by hand.
+`cloudflared` is the box's one internet-facing, long-lived daemon; a hand-placed binary in
+`/usr/local/bin` is invisible to `unattended-upgrades` and silently ages, while the apt
+package is verified against Cloudflare's signing key and picked up by automatic updates.
+
 ```bash
-curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
-chmod +x cloudflared
-sudo mv cloudflared /usr/local/bin/
+sudo mkdir -p --mode=0755 /usr/share/keyrings
+curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+
+echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared $(lsb_release -cs) main" \
+  | sudo tee /etc/apt/sources.list.d/cloudflared.list
+
+sudo apt update && sudo apt install cloudflared -y
 ```
 
 **2. Authenticate and Create Tunnel**
@@ -314,13 +330,22 @@ cloudflared tunnel route dns my-server app2.pitrified.qzz.io
 cloudflared tunnel route dns my-server bot.pitrified.qzz.io
 ```
 
-Before installing the service, copy the config to `/etc/cloudflared/`. The `sudo cloudflared service install` command runs as root, so `~` expands to `/root/` - it will not find files in your home directory.
+Before installing the service, deploy the config to `/etc/cloudflared/config.yml`. The
+`sudo cloudflared service install` command runs as root, so `~` expands to `/root/` - it
+will not find files in your home directory. In this repo the config is tracked at
+`configs/cloudflared/config.yml` and deployed by the script (see "Config File Tracking"
+below):
 
 ```bash
-sudo mkdir -p /etc/cloudflared
-sudo cp /home/YOUR_USERNAME/.cloudflared/config.yml /etc/cloudflared/config.yml
-sudo cp /home/YOUR_USERNAME/.cloudflared/cert.pem /etc/cloudflared/cert.pem
+sudo bash scripts/deploy-configs.sh
 ```
+
+Do **not** copy `cert.pem` to `/etc/cloudflared/`. It is the account-scoped credential
+used only by management commands (`tunnel login` / `create` / `route dns` / `delete`);
+`tunnel run` and the installed service never read it. Keeping it off the serving box means
+a box compromise exposes only the revocable per-tunnel JSON, never the whole account.
+Ideally run all management commands from a separate trusted machine and copy only the
+`<UUID>.json` to the box.
 
 Then install and start the service:
 
@@ -365,6 +390,8 @@ The wildcard `*.pitrified.qzz.io` matches subdomains only - it does **not** cove
 In the Access application configuration, click **Add domain** and add `pitrified.qzz.io` (no wildcard) alongside the existing `*.pitrified.qzz.io` entry. The same policy applies to both. After saving, visiting the root domain will also trigger the Google auth challenge.
 
 Whether to protect the root domain is a choice: leaving it public makes the landing page a portal anyone can see (but the apps behind it are still protected). Protecting it restricts the entire domain to authorised users only.
+
+> **Standing rule:** a new ingress hostname in `config.yml` plus `route dns` is publicly reachable the moment it exists. Never add one without confirming it is covered by an Access application (the wildcard covers subdomains; the apex needs its own entry). Do this phase immediately after Phase 4 - every hour in between is an hour the backends are exposed with no auth.
 
 **3. Optional: Device Posture Checks**
 
@@ -453,12 +480,22 @@ _Reference: [Official Telegram Webhook IP List](https://core.telegram.org/bots/w
 
 **2. Register the Webhook with Telegram**
 
-```bash
-curl -F "url=https://bot.pitrified.qzz.io/webhook" \
-  https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook
-```
+The IP-range bypass above removes the Access check for those ranges, so add Telegram's
+own application-level authentication: register the webhook with a `secret_token`, and have
+the bot reject any request whose `X-Telegram-Bot-Api-Secret-Token` header does not match.
+The IP bypass then only limits who can knock; the secret decides who gets in.
 
-_(Replace `<YOUR_BOT_TOKEN>` with the token provided by BotFather.)_
+Read the bot token from its credentials file rather than pasting it on the command line
+(pasting puts it in shell history and process listings):
+
+```bash
+BOT_TOKEN="$(cat ~/cred/tg-bot/token)"          # wherever the token lives
+WEBHOOK_SECRET="$(openssl rand -hex 32)"        # store alongside the token for the bot to check
+
+curl -F "url=https://bot.pitrified.qzz.io/webhook" \
+  -F "secret_token=${WEBHOOK_SECRET}" \
+  "https://api.telegram.org/bot${BOT_TOKEN}/setWebhook"
+```
 
 ---
 
@@ -648,9 +685,9 @@ _References: [Zensical](https://zensical.org/) · [Compatibility](https://zensic
 
 ---
 
-## Config File Tracking (Git-Backed Symlinks)
+## Config File Tracking (Git-Backed, Deployed as Copies)
 
-Several system config files created during this guide are tracked in the repo under `configs/` and symlinked from their original `/etc/` paths. Editing the repo file is sufficient - no need to touch `/etc/` directly.
+Several system config files created during this guide are tracked in the repo under `configs/` and deployed to their `/etc/` paths as **root-owned copies** by `scripts/deploy-configs.sh`. The repo is the source of truth; the script is the deploy gate - it shows a diff of every pending change before installing.
 
 | Repo path | System path |
 | --- | --- |
@@ -658,35 +695,39 @@ Several system config files created during this guide are tracked in the repo un
 | `configs/nginx/hub` | `/etc/nginx/sites-available/hub` |
 | `configs/sysctl/99-hardening.conf` | `/etc/sysctl.d/99-hardening.conf` |
 
+Copies, not symlinks, on purpose: a symlink from `/etc/` into a user-writable checkout of a public repo lets any user-level compromise - or a `git pull` of a bad commit - silently change root-consumed config (kernel sysctls, nginx, tunnel ingress) with no privilege boundary. With copies, live config only changes through `sudo` + the script's diff step. The corollary: **treat `git pull` on this repo as a config change** and review the diff before re-deploying.
+
 > **Not tracked:** `/etc/cloudflared/<UUID>.json` (tunnel credentials) - this file is a secret and must never be committed to git.
 
 ### Editing a config
 
-Edit the file in the repo, validate, then restart the service:
+Edit the file in the repo, deploy (the script diffs and validates), then restart the service:
 
 ```bash
 # example: update cloudflare tunnel ingress rules
 nano configs/cloudflared/config.yml
-sudo cloudflared tunnel ingress validate
+sudo bash scripts/deploy-configs.sh
 sudo systemctl restart cloudflared
 git add configs/cloudflared/config.yml && git commit -m "update tunnel ingress"
 ```
 
-For nginx:
+For nginx the deploy script already runs `nginx -t`; restart with `sudo systemctl restart nginx`. For sysctl changes apply with `sudo sysctl --system`.
+
+### Re-deploying (after cloning or moving the repo)
+
+If the repo is cloned fresh or moved, re-run the deploy script:
 
 ```bash
-nano configs/nginx/hub
-sudo nginx -t
-sudo systemctl restart nginx
-git add configs/nginx/hub && git commit -m "update nginx hub config"
+sudo bash scripts/deploy-configs.sh
 ```
 
-### Re-creating symlinks (after cloning or moving the repo)
+This script resolves the repo root from its own path, deploys all three configs (showing diffs), links `/var/www/hub` to the landing page, and validates each service config.
 
-If the repo is cloned fresh or moved, re-run the setup script:
+## Decommissioning a Box or Tunnel
 
-```bash
-sudo bash scripts/setup-symlinks.sh
-```
+When a box is retired or replaced by a fresh tunnel, revoke what it held - repointing DNS alone does not invalidate anything:
 
-This script resolves the repo root from its own path, recreates all three symlinks, and validates each service config.
+- **Delete the old tunnel** from the management machine: `cloudflared tunnel delete <NAME-or-UUID>`. This revokes its credentials JSON server-side; until then, anyone with a copy of that JSON (old disk, backups) can run the tunnel and serve traffic for any hostname still CNAMEd to it.
+- **Delete stale DNS records** for hostnames the new box does not serve, so they do not dangle at a dead tunnel.
+- **Remove stale backups**: delete the old tunnel's JSON from the password manager or wherever it was backed up.
+- **Wipe the old disk** if the hardware leaves your control.

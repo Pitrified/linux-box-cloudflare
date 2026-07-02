@@ -1,7 +1,12 @@
 {
     "cSpell.words": [
         "CGNAT",
+        "cloudflare",
         "cloudflared",
+        "nginx",
+        "nosniff",
+        "tailnet",
+        "tailscale",
         "yourdomain"
     ]
 }

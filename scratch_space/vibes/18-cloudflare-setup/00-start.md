@@ -74,11 +74,18 @@ just-in-time before each phase runs.
   The old `config.yml` referenced `entries.pitrified.qzz.io` -> `http://localhost:8000`.
   Decide per-subdomain ingress when we reach Phase 4. (ANS: pending)
 - How much of Phase 1 hardening (unattended-upgrades, ufw, sysctl, fail2ban) to apply,
-  given SSH hardening is moot without openssh. (ANS: pending)
+  given SSH hardening is moot without openssh.
+  (ANS 2026-07-02, from the security audit: apt upgrade + unattended-upgrades (verified enabled)
+  and `ufw default deny incoming` + `enable` go **before** the Phase 4 DNS repoint - with no
+  openssh there is no inbound rule needed at all; verify a Tailscale SSH session survives
+  `ufw enable` before closing the one that ran it. sysctl file any time via `deploy-configs.sh`.
+  **Skip fail2ban**: no sshd and all web traffic arrives from the tunnel as localhost, so it
+  has nothing to ban.)
 
 ## Pointers
 
 - Guide the stack mirrors: [`docs/01_box_setup.md`](../../docs/01_box_setup.md)
 - Tracked config files: `configs/cloudflared/config.yml`, `configs/nginx/hub`, `configs/sysctl/99-hardening.conf`
-- Symlink helper: [`scripts/setup-symlinks.sh`](../../scripts/setup-symlinks.sh)
+- Config deploy helper: [`scripts/deploy-configs.sh`](../../scripts/deploy-configs.sh)
+  (replaced `setup-symlinks.sh` on 2026-07-02: root-owned copies with a diff gate, not symlinks)
 - Full current-state assessment: [`01-assessment.md`](01-assessment.md)

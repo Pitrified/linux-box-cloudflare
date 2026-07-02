@@ -7,9 +7,6 @@ ingress:
     service: http://localhost:8090
   - hostname: entries.pitrified.qzz.io
     service: http://localhost:8000
-  # ssh
-  - hostname: ssh.pitrified.qzz.io
-    service: ssh://localhost:22
   # Catch-all (Required)
   - service: http_status:404
 

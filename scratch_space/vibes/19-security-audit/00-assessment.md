@@ -275,3 +275,29 @@ Worth keeping and not diluting:
 3. In the Phase 4 sub-plan: config edit before symlink script (M5); add `tunnel delete <old-UUID>` + old-disk wipe as explicit steps (M1); schedule Phase 5 immediately after (M2).
 4. When Phase 7 happens: `secret_token` on the webhook, token out of shell history (M3).
 5. Housekeeping when convenient: local-box.md trust-level update (M4), L1-L5.
+
+## Actions taken (2026-07-02, same day)
+
+- **H1 resolved**: `scripts/setup-symlinks.sh` replaced by `scripts/deploy-configs.sh` -
+  `/etc` configs deployed as root-owned copies (root:root 644) with a diff shown before each
+  install; `/var/www/hub` stays a symlink (site content, not root-consumed config).
+  Guide's "Config File Tracking" section rewritten; `git pull` + redeploy documented as a
+  reviewed config change.
+- **H2 resolved**: `configs/nginx/hub` now `listen 127.0.0.1:8090;`; guide Phase 3 states the
+  loopback-only rule for all tunnelled backends.
+- **H3 folded into the plan**: hardening before the DNS repoint; fail2ban deliberately skipped;
+  open question in `18-cloudflare-setup/00-start.md` answered.
+- **H4 resolved in the guide**: Phase 4.1 installs cloudflared from Cloudflare's apt repo.
+- **M1 folded into the plan**: old-tunnel `tunnel delete`, backup removal, and disk wipe are
+  Phase 4 steps; guide gained a "Decommissioning a Box or Tunnel" section.
+- **M2 partially addressed**: Phase 5 sequenced immediately after Phase 4; standing
+  Access-coverage rule added to guide Phase 5. Backend JWT validation remains open (future
+  `fastapi-tools` work).
+- **M3 resolved in the guide**: Phase 7 uses `secret_token` and reads the bot token from file.
+- **M5 resolved**: `ssh.*` ingress removed from the tracked `config.yml` (UUID rewrite still
+  waits for Phase 4); deploy script creates `/etc/cloudflared`, tolerates pre-creds validation
+  failure, and requires root explicitly.
+- Guide nits from L4 applied: `Protocol 2` dropped, `cert.pem` copy step deleted,
+  unattended-upgrades verification added.
+- Still open: M4 (local-box.md trust level), M2's JWT validation, L1 (public recon surface),
+  L2 (SHA-pin actions), L3 (nginx headers, self-hosted fonts), L5 (backup hygiene at rotation).
