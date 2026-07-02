@@ -6,6 +6,7 @@ Auto-loaded into every session on this host, for every project.
 ## What this box is
 
 - Low-secret sandbox: no user-accessible secrets, no browser logins. Reached over SSH + Tailscale from VS Code or via remote controlled claude sessions.
+- **No GitHub credentials live on this box.** Pushes happen from `g7` sessions using a fine-grained PAT; the box itself cannot push. Do not attempt to configure git credentials, add SSH keys for github.com, or work around a failed push - hand the push back to the user.
 - The box may hold **root-only, revocable service credentials** (e.g. the Cloudflare tunnel JSON at `/etc/cloudflared/<UUID>.json`, root:600). You run unprivileged and cannot read them; never try to work around that, and never copy, echo, or commit anything from `/etc/cloudflared/`. If such a credential is suspected compromised, the response is to rotate it (delete/recreate the tunnel), not to investigate it in place.
 - `/etc` service configs are root-owned **copies** deployed from this repo via `scripts/deploy-configs.sh` (a diff is shown at deploy time). Editing the repo file changes nothing live until the user runs the deploy script with sudo - do not expect edits under `configs/` to take effect on their own.
 - Permissions run in bypass mode (see `~/.claude/settings.local.json`): tool prompts are skipped, so you have broad latitude to run commands and edit files.

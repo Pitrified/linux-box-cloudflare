@@ -312,3 +312,7 @@ Worth keeping and not diluting:
 - Still open: M2's backend JWT validation (future `fastapi-tools` work), L1 (public recon
   surface - a standing acceptance decision, not a fix), L5 (backup hygiene at rotation -
   now documented in the guide's decommission section).
+- Clarified with the user: **the box holds no GitHub credentials.** Pushes use a
+  fine-grained PAT from `g7` sessions; `transport = "ssh"` in `repos.toml` only shapes
+  clone URLs. This narrows H1 further - the push half of the trust chain requires
+  compromising `g7`, not the box. Recorded in `local-box.md`.
