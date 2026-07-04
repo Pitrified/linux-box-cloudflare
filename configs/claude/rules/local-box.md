@@ -45,7 +45,7 @@ Scale the confirmation, not the note:
 - Installs, configures globally, or is annoying to undo: write the note AND pause for my approval before acting.
 - In between: write the note, then proceed without pausing.
 
-The "unambiguous" allowance governs whether to pause for confirmation, never whether to write the note. For genuinely multi-phase efforts, use the `tracked_development` skill instead of a single note.
+The "unambiguous" allowance governs whether to pause for confirmation, never whether to write the note. For genuinely multi-phase efforts, use the `tracked-development` skill instead of a single note.
 
 ## Plans folder
 
