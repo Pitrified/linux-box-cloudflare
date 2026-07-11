@@ -144,3 +144,11 @@ roles  = ["consumer"]
 [[repo]]
 name   = "pitrified.github.io"
 roles  = ["consumer"]
+
+[[repo]]
+name   = "flutter-setup-project"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "snap_fit"
+roles  = ["consumer"]
