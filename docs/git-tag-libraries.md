@@ -201,4 +201,4 @@ line if your layout differs.
 | ------------------ | ------- | ---------- | ----------------------------------------------- |
 | `llm-core`         | 0.2.2   | yes        | <https://github.com/Pitrified/llm-core>         |
 | `fastapi-tools`    | 0.1.0   | yes        | <https://github.com/Pitrified/fastapi-tools>    |
-| `media-downloader` | 0.1.2   | yes        | <https://github.com/Pitrified/media-downloader> |
+| `media-downloader` | 0.2.0   | pending    | <https://github.com/Pitrified/media-downloader> |
