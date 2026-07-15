@@ -1,5 +1,5 @@
 ---
-status: planned
+status: done
 ---
 
 # Phase 5 - Zero Trust Access + HSTS re-enable
@@ -39,6 +39,18 @@ Context: [`00-start.md`](00-start.md); depends on [`05-phase4-tunnel.md`](05-pha
    chosen (it is effectively irreversible).
 4. **Notifications** (user, dashboard): alert on tunnel health (down/degraded).
 5. Optional: session duration for the Access app (default 24h is fine).
+
+## Decisions taken in-session (2026-07-15)
+
+- The prior setup's Access apps survive and cover everything: "Home Portal" (apex) +
+  "Internal Apps" (`*.pitrified.qzz.io`), both with the "Allow Friends" email-allowlist
+  policy. Nothing rebuilt; root protection = yes (inherited).
+- **Login method: One-time PIN (email OTP), kept** - auth handled entirely by Cloudflare,
+  no third-party IdP. Future option: Cloudflare Access supports adding Google as an OAuth
+  identity provider (Zero Trust -> Settings -> Authentication -> Login methods); could be
+  added alongside OTP later for phishing-resistance. Not done now.
+- Negative-test note: for a non-allowlisted email, Access still shows "Enter your code"
+  but sends no code - intentional anti-enumeration; the deny is the code never arriving.
 
 ## Out of scope
 

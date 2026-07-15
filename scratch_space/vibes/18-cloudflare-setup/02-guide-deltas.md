@@ -25,6 +25,7 @@ Source decisions: [`00-start.md`](00-start.md); pitfalls: [`01-assessment.md`](0
 | 9 | Phase 2.4 (Bot Fight Mode + WAF) | Enable both | Can block the Telegram webhook (Phase 7); needs Access bypass + BFM check | guide-gap | Yes - cross-reference Phase 7 from the BFM/WAF step |
 | 10 | Whole guide | Runs commands directly | `sudo` needs a TTY here; privileged steps handed over as `! <command>` | box-specific | No |
 | 11 | Phase 3 (`/var/www/hub` symlink into the repo) | Symlink and serve | Ubuntu 26.04 creates homes `750`, so `www-data` cannot traverse `/home/<user>` and nginx 404s with `stat() ... Permission denied`; fixed with a scoped ACL: `setfacl -m u:www-data:--x /home/<user>` (undo: `setfacl -x u:www-data /home/<user>`) | guide-gap | Yes - add the ACL step (or a home-perms check) to Phase 3 |
+| 12 | Phase 4.1 (apt repo, `$(lsb_release -cs)`) | Use the box's codename | Ubuntu 26.04 `resolute` is not published on pkg.cloudflare.com (Release 404); fall back to `noble` - the package is a static binary, dist name is nominal | guide-gap | Yes - add "if your codename 404s, use the latest published LTS name" |
 
 ## Guide edits already applied (2026-07-02, from the security audit)
 
@@ -48,6 +49,6 @@ drove a batch of direct guide + repo edits, outside this table's fold-later flow
 
 ## When updating the guide
 
-Fold the remaining **guide-gap** rows (3, 8, 9, 11) - they are general and confirmed by this run.
+Fold the remaining **guide-gap** rows (3, 8, 9, 11, 12) - they are general and confirmed by this run.
 Leave **box-specific** rows as optional notes or omit. Re-check each row against the box's
 actual execution before editing the guide; mark a row done here when its guide edit lands.
