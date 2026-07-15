@@ -16,16 +16,16 @@ Source decisions: [`00-start.md`](00-start.md); pitfalls: [`01-assessment.md`](0
 | - | -------------- | ------------------- | ------------- | ---- | ---------------- |
 | 1 | Phase 4.2 (`tunnel login` / `create`) | Run on the box | Run management (`login` / `create` / `route dns`) on the trusted laptop `g7`; `cert.pem` never lands on the box; only `<UUID>.json` is `scp`'d over Tailscale | box-specific | As an optional "management from a separate trusted machine" note; keep the on-box path as default |
 | 2 | Phase 4.3 (secure creds) | `mv ~/.cloudflared/*.json` from the box's own login | JSON arrives via `scp` from `g7`, then same `chmod 600` / `chown root:root` | box-specific | Aside only |
-| 3 | Phase 4.5 (route DNS) | `cloudflared tunnel route dns <t> <host>` | Needs `--overwrite-dns` (or dashboard pre-delete) because prior records exist | guide-gap | Yes - add `--overwrite-dns` caveat for re-use / migration cases |
+| 3 | Phase 4.5 (route DNS) | `cloudflared tunnel route dns <t> <host>` | Needs `--overwrite-dns` (or dashboard pre-delete) because prior records exist | guide-gap | **Done 2026-07-15** - `--overwrite-dns` caveat added to Phase 4.5 |
 | 4 | Phase 4.5 (copy config) | `cp ~/.cloudflared/config.yml /etc/cloudflared/config.yml` | `config.yml` is tracked and deployed via `scripts/deploy-configs.sh` (root-owned copy with diff) | guide-gap | **Done 2026-07-02** - guide Phase 4.5 and the tracking section now both use the deploy script |
 | 5 | Phase 4.5 (copy cert) | `cp ~/.cloudflared/cert.pem /etc/cloudflared/cert.pem` | Skipped entirely - `tunnel run` never reads `cert.pem` | guide-gap | **Done 2026-07-02** - copy step removed from the guide; management-only note added |
 | 6 | Phase 1.3 / 1.4 (sshd + ufw ssh) | Harden `sshd_config`, `ufw allow ssh` | No openssh; Tailscale SSH instead. sshd steps moot; no ufw ssh rule | box-specific | Aside: "if you use Tailscale SSH, skip the sshd/ufw-ssh steps" |
 | 7 | Phase 6 (SSH over tunnel) | Whole phase | Dropped (Tailscale SSH) | box-specific | Keep phase; note it's optional/alternative to Tailscale |
-| 8 | Phase 2.4 (HSTS "enable last") | Enable after HTTPS confirmed | On a **re-used zone** HSTS may already be on; disable before repoint, re-enable after. `preload` makes HTTP refusal sticky | guide-gap | Yes - add a re-use/migration note to the HSTS step |
-| 9 | Phase 2.4 (Bot Fight Mode + WAF) | Enable both | Can block the Telegram webhook (Phase 7); needs Access bypass + BFM check | guide-gap | Yes - cross-reference Phase 7 from the BFM/WAF step |
+| 8 | Phase 2.4 (HSTS "enable last") | Enable after HTTPS confirmed | On a **re-used zone** HSTS may already be on; disable before repoint, re-enable after. `preload` makes HTTP refusal sticky | guide-gap | **Done 2026-07-15** - re-use/migration note + suggested settings added to Phase 2.4 |
+| 9 | Phase 2.4 (Bot Fight Mode + WAF) | Enable both | Can block the Telegram webhook (Phase 7); needs Access bypass + BFM check | guide-gap | **Done 2026-07-15** - webhook caveat added under the BFM/WAF bullet |
 | 10 | Whole guide | Runs commands directly | `sudo` needs a TTY here; privileged steps handed over as `! <command>` | box-specific | No |
-| 11 | Phase 3 (`/var/www/hub` symlink into the repo) | Symlink and serve | Ubuntu 26.04 creates homes `750`, so `www-data` cannot traverse `/home/<user>` and nginx 404s with `stat() ... Permission denied`; fixed with a scoped ACL: `setfacl -m u:www-data:--x /home/<user>` (undo: `setfacl -x u:www-data /home/<user>`) | guide-gap | Yes - add the ACL step (or a home-perms check) to Phase 3 |
-| 12 | Phase 4.1 (apt repo, `$(lsb_release -cs)`) | Use the box's codename | Ubuntu 26.04 `resolute` is not published on pkg.cloudflare.com (Release 404); fall back to `noble` - the package is a static binary, dist name is nominal | guide-gap | Yes - add "if your codename 404s, use the latest published LTS name" |
+| 11 | Phase 3 (`/var/www/hub` symlink into the repo) | Symlink and serve | Ubuntu 26.04 creates homes `750`, so `www-data` cannot traverse `/home/<user>` and nginx 404s with `stat() ... Permission denied`; fixed with a scoped ACL: `setfacl -m u:www-data:--x /home/<user>` (undo: `setfacl -x u:www-data /home/<user>`) | guide-gap | **Done 2026-07-15** - home-perms ACL block added to Phase 3.2 |
+| 12 | Phase 4.1 (apt repo, `$(lsb_release -cs)`) | Use the box's codename | Ubuntu 26.04 `resolute` is not published on pkg.cloudflare.com (Release 404); fall back to `noble` - the package is a static binary, dist name is nominal | guide-gap | **Done 2026-07-15** - codename-404 fallback note added to Phase 4.1 |
 
 ## Guide edits already applied (2026-07-02, from the security audit)
 
@@ -49,6 +49,6 @@ drove a batch of direct guide + repo edits, outside this table's fold-later flow
 
 ## When updating the guide
 
-Fold the remaining **guide-gap** rows (3, 8, 9, 11, 12) - they are general and confirmed by this run.
+All guide-gap rows are folded in (3, 8, 9, 11, 12 done 2026-07-15; 4, 5 done 2026-07-02).
 Leave **box-specific** rows as optional notes or omit. Re-check each row against the box's
 actual execution before editing the guide; mark a row done here when its guide edit lands.

@@ -165,8 +165,11 @@ Apply these settings in the Cloudflare dashboard once DNS is live. These harden 
 - **SSL/TLS → Overview** → Set mode to **Full (Strict)**. This ensures end-to-end encrypted connections and rejects invalid certificates.
 - **SSL/TLS → Edge Certificates** → Set minimum TLS version to **TLS 1.2**.
 - **SSL/TLS → Edge Certificates → HSTS** → _Enable only after confirming HTTPS works end-to-end_ (i.e., after Phase 4 is complete and a subdomain loads correctly in a browser without errors). HSTS tells browsers to never use HTTP, and enabling it prematurely on a misconfigured site can lock you out.
+  Suggested settings: max-age 6 months, `includeSubDomains` on, **preload off** - preload puts the domain on a browser-shipped list and is effectively irreversible.
+  **Re-using a zone (box migration):** HSTS is a zone-level setting, so it may already be enabled from the previous setup. Check it _before_ repointing DNS: if it is on and HTTPS breaks mid-transition, browsers hard-fail instead of falling back to HTTP. Disable it before the cutover and re-enable after the end-to-end test. If it was ever enabled _with preload_, the toggle does not help - keep the transition HTTPS-only.
 - **Security → Settings** → Enable **Bot Fight Mode** to block automated scanners at the edge.
 - **Security → WAF** → Enable the **Cloudflare Managed Ruleset**. This is available on the free tier and provides a baseline web application firewall at zero cost. If the WAF page is not visible, look under **Security → Overview** for a "Managed rules" card, or under **Security → Application Security** - the nav label varies by account.
+  > Both Bot Fight Mode and the managed WAF can challenge or block Telegram's servers calling a bot webhook. If you deploy a bot (Phase 7), the Access bypass there covers the identity check only - also confirm Bot Fight Mode is not intercepting the webhook path.
 - **Notifications** → Set up alerts for tunnel health and unusual traffic spikes.
 
 ---
@@ -199,6 +202,16 @@ sudo bash scripts/deploy-configs.sh
 ```
 
 The landing page lives in `sites/landing/` of the [linux-box-cloudflare](https://github.com/Pitrified/linux-box-cloudflare) repo.
+
+**Home-directory permissions:** recent Ubuntu releases create home directories as `750`,
+so the nginx worker (`www-data`) cannot traverse `/home/<user>` to reach the symlinked
+checkout and every request 404s (`stat() ... Permission denied` in the error log).
+Grant traverse-only access to `www-data` alone, rather than opening the home to all users:
+
+```bash
+sudo setfacl -m u:www-data:--x /home/<user>
+# undo: sudo setfacl -x u:www-data /home/<user>
+```
 
 **3. Create an nginx Site Config**
 
@@ -262,6 +275,11 @@ echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudf
 
 sudo apt update && sudo apt install cloudflared -y
 ```
+
+If `apt update` 404s on the cloudflared repo, your release's codename is not published
+on pkg.cloudflare.com yet (seen with Ubuntu 26.04 `resolute`). Replace
+`$(lsb_release -cs)` in the sources line with the latest published LTS codename
+(e.g. `noble`) - the package is a static binary, so the dist name is nominal.
 
 **2. Authenticate and Create Tunnel**
 
@@ -328,6 +346,14 @@ cloudflared tunnel route dns my-server pitrified.qzz.io
 cloudflared tunnel route dns my-server app1.pitrified.qzz.io
 cloudflared tunnel route dns my-server app2.pitrified.qzz.io
 cloudflared tunnel route dns my-server bot.pitrified.qzz.io
+```
+
+`route dns` refuses a hostname that already has a DNS record (`record already exists`).
+On a re-used zone - e.g. migrating a box, where stale CNAMEs still point at the old
+tunnel - add `--overwrite-dns`:
+
+```bash
+cloudflared tunnel route dns --overwrite-dns my-server pitrified.qzz.io
 ```
 
 Before installing the service, deploy the config to `/etc/cloudflared/config.yml`. The
