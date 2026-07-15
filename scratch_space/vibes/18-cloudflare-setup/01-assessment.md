@@ -78,6 +78,31 @@ Mapping [`docs/01_box_setup.md`](../../docs/01_box_setup.md) to this box:
    registered. If a bot is deployed here (Phase 7), add the Access bypass for the exact webhook path
    (guide Phase 7) and confirm Bot Fight Mode does not intercept it. Deferred with Phase 7.
 
+## Re-verification (2026-07-15)
+
+Read-only re-probe before starting execution; no changes made. Box state matches the original
+assessment: cloudflared / nginx / openssh still not installed, no `/etc/cloudflared` or
+`/etc/nginx`, ufw installed but inactive, unattended-upgrades installed **and active**
+(head start on Phase 1 step 1), thermald and tailscaled active, Tailscale IP `100.126.229.25`
+unchanged. All listeners are loopback or Tailscale-bound. `g7` was offline on the tailnet at
+probe time (last seen 8h prior) - it must be up for the Phase 4 management commands.
+
+Domain-side drift from the original assessment, both favourable:
+
+1. **The zone is already behind Cloudflare Access.** Apex, `ssh.*` and `entries.*` all answer
+   `302` to `pitrified.cloudflareaccess.com/.../login/<hostname>` - a wildcard-or-per-host
+   Access policy from the prior setup is still active at the edge. So the domain is not
+   serving a dead-tunnel error page today, and the "no ingress hostname without Access
+   coverage" rule is already satisfied *before* the repoint. Phase 5 becomes
+   verify/adjust the existing Access app rather than create from scratch.
+2. **HSTS appears off**: no `strict-transport-security` header on any probed response,
+   so wrinkle 5 (disable HSTS before the repoint) likely needs no action - confirm in the
+   dashboard during Phase 4 prep, then enable HSTS in Phase 5 as planned.
+
+Stale proxied records for `ssh.*` and `entries.*` still exist (wrinkle 7 unchanged).
+Note: wrinkle 6 below predates the 2026-07-02 switch from `setup-symlinks.sh` to
+`scripts/deploy-configs.sh` (root-owned copies); the deploy script is the current mechanism.
+
 ## Suggested execution order
 
 Check HSTS state (disable it if already on) -> Phase 3 (nginx + landing) ->
