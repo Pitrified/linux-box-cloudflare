@@ -137,6 +137,8 @@ roles  = ["consumer"]
 name   = "python-tools"
 roles  = ["consumer"]
 
+# various
+
 [[repo]]
 name   = "Pitrified"
 roles  = ["consumer"]
@@ -151,4 +153,8 @@ roles  = ["consumer"]
 
 [[repo]]
 name   = "snap_fit"
+roles  = ["consumer"]
+
+[[repo]]
+name   = "controcanto"
 roles  = ["consumer"]
