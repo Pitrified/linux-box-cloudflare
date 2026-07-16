@@ -58,6 +58,11 @@ deploy "$REPO/configs/cloudflared/config.yml" /etc/cloudflared/config.yml
 echo ""
 echo "=== nginx ==="
 deploy "$REPO/configs/nginx/hub" /etc/nginx/sites-available/hub
+deploy "$REPO/configs/nginx/cc-kb" /etc/nginx/sites-available/cc-kb
+# sites-enabled is a plain symlink into sites-available (hub was linked by hand;
+# doing it here keeps a fresh box complete)
+ln -sfn /etc/nginx/sites-available/cc-kb /etc/nginx/sites-enabled/cc-kb
+echo "  enabled  /etc/nginx/sites-enabled/cc-kb"
 
 echo ""
 echo "=== sysctl ==="
@@ -68,6 +73,11 @@ echo "=== sites (symlink, content not config) ==="
 mkdir -p /var/www
 ln -sfn "$REPO/sites/landing" /var/www/hub
 echo "  linked /var/www/hub -> $REPO/sites/landing"
+# cc-kb serves the mkdocs build from the sibling repo; Access verified on the
+# canary 2026-07-16 (controcanto plan 15, step D). sites/cc-kb-canary stays in
+# the repo for the next <prefix>-kb rollout.
+ln -sfn "$REPO/../controcanto/site" /var/www/cc-kb
+echo "  linked /var/www/cc-kb -> $REPO/../controcanto/site"
 
 echo ""
 echo "=== Validation ==="

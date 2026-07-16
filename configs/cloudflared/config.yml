@@ -5,6 +5,9 @@ ingress:
   # home page
   - hostname: pitrified.qzz.io
     service: http://localhost:8090
+  # private kb render (behind Cloudflare Access, see controcanto plan 15)
+  - hostname: cc-kb.pitrified.qzz.io
+    service: http://localhost:8091
   # Catch-all (Required)
   - service: http_status:404
 

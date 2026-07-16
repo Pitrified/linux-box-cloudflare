@@ -1,0 +1,24 @@
+server {
+    # loopback only: traffic must arrive via the cloudflared tunnel, never the LAN
+    listen 127.0.0.1:8091;
+    server_name localhost;
+
+    root /var/www/cc-kb;
+    index index.html;
+
+    server_tokens off;
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    # private site behind Cloudflare Access: belt-and-suspenders against indexing
+    add_header X-Robots-Tag "noindex, nofollow" always;
+    # site is fully self-contained (theme.font: false, assets self-hosted);
+    # 'unsafe-inline' for scripts only: MkDocs Material injects inline <script>
+    # tags (palette toggle, instant navigation) - no inline styles in the build
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'" always;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
