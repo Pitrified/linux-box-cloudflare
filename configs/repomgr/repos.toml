@@ -156,5 +156,6 @@ name   = "snap_fit"
 roles  = ["consumer"]
 
 [[repo]]
-name   = "controcanto"
-roles  = ["consumer"]
+name    = "controcanto"
+roles   = ["consumer"]
+private = true
