@@ -134,6 +134,9 @@ name   = "flutter-setup-project"
 [[repo]]
 name   = "snap_fit"
 
+[[repo]]
+name   = "plans"
+
 # ---------------------------------------------------------------------------
 # Home-folder repos - plain repos cloned into ~ instead of base_path
 # ---------------------------------------------------------------------------
