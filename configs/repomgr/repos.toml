@@ -5,6 +5,10 @@
 #
 # state_file is resolved relative to this file's parent directory.
 # Clone URLs are derived from transport/host/owner + each repo's name.
+#
+# Roles: "source" produces tags, "consumer" has git deps on a source.
+# A repo with no roles is plain: cloned, fetched, and fast-forwarded only -
+# never tested, tagged, or dep-updated. Omit `roles` for a plain repo.
 
 [settings]
 base_path        = "~/repos"
@@ -46,85 +50,6 @@ roles  = ["consumer"]
 name   = "kit-hub"
 roles  = ["consumer"]
 
-# ---------------------------------------------------------------------------
-# Standalone - tracked for git status/fetch only, not in dep chain
-# ---------------------------------------------------------------------------
-
-[[repo]]
-name   = "linux-box-cloudflare"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "repomgr"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "tg-central-hub-bot"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "python-project-template"
-roles  = ["consumer"]
-
-[[repo]]
-name       = "recipamatic"
-roles      = ["consumer"]
-test_cmd   = "cd py && poetry run pytest"
-
-[[repo]]
-name   = "recipinator"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "cookbook"
-roles  = ["consumer"]
-
-# Local name uses an underscore; the GitHub repo uses a hyphen.
-[[repo]]
-name      = "convo_craft"
-repo_name = "convo-craft"
-roles     = ["consumer"]
-
-[[repo]]
-name   = "brazilian-bites"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "worldly-words"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "fala-comigo-ai-tutor"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "go-accenter"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "trip-me-up"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "climbing-wire"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "holo-table"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "abyss"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "pose-tools"
-roles  = ["consumer"]
-
-[[repo]]
-name   = "places-tools"
-roles  = ["consumer"]
-
 [[repo]]
 name   = "lang-tools"
 roles  = ["consumer"]
@@ -134,28 +59,97 @@ name   = "lang-tutor"
 roles  = ["consumer"]
 
 [[repo]]
-name   = "python-tools"
+name   = "python-project-template"
 roles  = ["consumer"]
 
-# various
+# ---------------------------------------------------------------------------
+# Plain repos - tracked for git status/fetch/fast-forward only, no dep chain
+# ---------------------------------------------------------------------------
+
+[[repo]]
+name   = "linux-box-cloudflare"
+
+[[repo]]
+name   = "repomgr"
+
+[[repo]]
+name   = "tg-central-hub-bot"
+
+[[repo]]
+name   = "recipamatic"
+
+[[repo]]
+name   = "recipinator"
+
+[[repo]]
+name   = "cookbook"
+
+# Local name uses an underscore; the GitHub repo uses a hyphen.
+[[repo]]
+name      = "convo_craft"
+repo_name = "convo-craft"
+
+[[repo]]
+name   = "brazilian-bites"
+
+[[repo]]
+name   = "worldly-words"
+
+[[repo]]
+name   = "fala-comigo-ai-tutor"
+
+[[repo]]
+name   = "go-accenter"
+
+[[repo]]
+name   = "trip-me-up"
+
+[[repo]]
+name   = "climbing-wire"
+
+[[repo]]
+name   = "holo-table"
+
+[[repo]]
+name   = "abyss"
+
+[[repo]]
+name   = "pose-tools"
+
+[[repo]]
+name   = "places-tools"
+
+[[repo]]
+name   = "python-tools"
 
 [[repo]]
 name   = "Pitrified"
-roles  = ["consumer"]
 
 [[repo]]
 name   = "pitrified.github.io"
-roles  = ["consumer"]
 
 [[repo]]
 name   = "flutter-setup-project"
-roles  = ["consumer"]
 
 [[repo]]
 name   = "snap_fit"
-roles  = ["consumer"]
+
+# ---------------------------------------------------------------------------
+# Home-folder repos - plain repos cloned into ~ instead of base_path
+# ---------------------------------------------------------------------------
+
+[[repo]]
+name = "dotfiles"
+path = "~/dotfiles"
+
+[[repo]]
+name = "bootstrap"
+path = "~/bootstrap"
+
+# ---------------------------------------------------------------------------
+# Private - listed in status (with a lock marker), skipped by --skip-private
+# ---------------------------------------------------------------------------
 
 [[repo]]
 name    = "controcanto"
-roles   = ["consumer"]
 private = true
