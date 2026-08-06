@@ -137,6 +137,15 @@ name   = "snap_fit"
 [[repo]]
 name   = "plans"
 
+[[repo]]
+name = "epub-summary"
+
+[[repo]]
+name = "interleave-epub"
+
+[[repo]]
+name = "show-epub"
+
 # ---------------------------------------------------------------------------
 # Home-folder repos - plain repos cloned into ~ instead of base_path
 # ---------------------------------------------------------------------------
