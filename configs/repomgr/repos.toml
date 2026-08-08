@@ -146,6 +146,10 @@ name = "interleave-epub"
 [[repo]]
 name = "show-epub"
 
+[[repo]]
+name    = "epub-fixer"
+private = true
+
 # ---------------------------------------------------------------------------
 # Home-folder repos - plain repos cloned into ~ instead of base_path
 # ---------------------------------------------------------------------------

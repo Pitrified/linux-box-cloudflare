@@ -18,6 +18,12 @@
 		},
 		{
 			"path": "../../epub-fixer"
+		},
+		{
+			"path": "../../python-project-template"
+		},
+		{
+			"path": "../../../dotfiles"
 		}
 	],
 	"settings": {
