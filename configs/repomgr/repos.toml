@@ -112,9 +112,11 @@ name   = "holo-table"
 
 [[repo]]
 name   = "abyss"
+roles  = ["consumer"]
 
 [[repo]]
 name   = "pose-tools"
+roles  = ["source"]
 
 [[repo]]
 name   = "places-tools"
