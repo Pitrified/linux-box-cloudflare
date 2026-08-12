@@ -134,7 +134,23 @@ consumer's venv at your local checkout rather than the pinned git tag.
 
 Each consumer ships a `Makefile` with targets that do this. The targets use `uv pip install -e`
 to install the library directly into the active venv without modifying `pyproject.toml`.
-Running `uv sync` afterwards reverts to the pinned git tag.
+
+**The override is fragile, and reverting is the default.** The editable install exists only in
+`.venv` and is not in `uv.lock`, so it is undone by an explicit `uv sync` *and* by any plain
+`uv run` - which syncs the environment before it runs anything. That includes `uv run pytest`,
+the editor's test runner, and pre-commit. Measured on uv 0.11.24:
+
+| step                              | what resolves      |
+| --------------------------------- | ------------------ |
+| `uv sync`                         | the pinned tag     |
+| `uv pip install -e ../<lib>`      | the local checkout |
+| one plain `uv run` anything       | the pinned tag     |
+
+The fix is to pass `--no-sync` on every command that runs project code, which is what the
+Makefile targets in `python-project-template` do (`UV_RUN := uv run --no-sync`). `UV_FROZEN=1` /
+`--frozen` does **not** help: it only stops `uv.lock` from being updated, the environment is still
+synced. For a command that must not depend on venv state at all, use an overlay instead:
+`uv run --with-editable ../<lib> pytest`.
 
 ### Template Makefile
 
@@ -169,9 +185,16 @@ make dev-llm-core
 # Use a library from a custom path
 make dev-llm-core LLM_CORE_PATH=~/dev/llm-core
 
-# Revert to the pinned git tag version
-uv sync
+# Work with the override in place - make targets pass --no-sync
+make test
+
+# Revert to the pinned git tag version, deliberately
+make undev   # or: uv sync
 ```
+
+Note that `kit-hub`, `media-downloader` and `laife` currently ship `dev-*` targets written before
+this was understood: their Makefiles do not pass `--no-sync`, so an override there survives only
+until the next `uv run`. Update them from the template's Makefile when convenient.
 
 The `PATH ?= ../...` default assumes repos are checked out as siblings. Override on the command
 line if your layout differs.
