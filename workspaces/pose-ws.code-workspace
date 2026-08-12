@@ -1,0 +1,75 @@
+{
+	"folders": [
+		{
+			"name": "linux-box-cloudflare",
+			"path": ".."
+		},
+		{
+			"name": "repomgr",
+			"path": "../../repomgr"
+		},
+		{
+			"name": "python-project-template",
+			"path": "../../python-project-template"
+		},
+		{
+			"name": "fastapi-tools",
+			"path": "../../fastapi-tools"
+		},
+		{
+			"name": "climbing-wire",
+			"path": "../../climbing-wire"
+		},
+		{
+			"name": "holo-table",
+			"path": "../../holo-table"
+		},
+		{
+			"name": "abyss",
+			"path": "../../abyss"
+		},
+		{
+			"name": "pose-tools",
+			"path": "../../pose-tools"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"vectorable",
+			"vectorstores"
+		],
+		"files.exclude": {
+			"**/.venv": true,
+			"**/__pycache__": true,
+			"**/.ruff_cache": true,
+			"**/.pytest_cache": true,
+			"**/.mypy_cache": true,
+			"**/node_modules": true,
+			"**/htmlcov": true
+		},
+		"search.exclude": {
+			"**/.venv/**": true,
+			"**/__pycache__/**": true,
+			"**/.ruff_cache/**": true,
+			"**/.pytest_cache/**": true,
+			"**/.mypy_cache/**": true,
+			"**/node_modules/**": true,
+			"**/cache/**": true,
+			"**/site/**": true,
+			"**/htmlcov/**": true,
+			"**/build/**": true,
+			"**/dist/**": true
+		},
+		"files.watcherExclude": {
+			"**/.venv/**": true,
+			"**/__pycache__/**": true,
+			"**/.ruff_cache/**": true,
+			"**/.pytest_cache/**": true,
+			"**/node_modules/**": true,
+			"**/cache/**": true,
+			"**/site/**": true,
+			"**/build/**": true,
+			"**/dist/**": true
+		}
+	}
+}
