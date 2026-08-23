@@ -7,6 +7,9 @@
 		{
 			"name": "genealogy-gramps-fn",
 			"path": "../../genealogy-gramps-fn"
+		},
+		{
+			"path": "../../plans"
 		}
 	],
 	"settings": {
