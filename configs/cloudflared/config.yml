@@ -8,6 +8,11 @@ ingress:
   # private kb render (behind Cloudflare Access, see controcanto plan 15)
   - hostname: cc-kb.pitrified.qzz.io
     service: http://localhost:8091
+  # family tree (Gramps Web, own Access application; see genealogy-gramps-fn)
+  # points straight at the container: Gramps Web serves its own frontend, so a
+  # reverse proxy would only add nginx's 1MB body limit and a static-site CSP
+  - hostname: family.pitrified.qzz.io
+    service: http://localhost:8092
   # Catch-all (Required)
   - service: http_status:404
 
