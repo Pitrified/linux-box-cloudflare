@@ -99,7 +99,13 @@ name   = "worldly-words"
 name   = "fala-comigo-ai-tutor"
 
 [[repo]]
+name   = "fala-language-tutor"
+
+[[repo]]
 name   = "go-accenter"
+
+[[repo]]
+name   = "go-firefly"
 
 [[repo]]
 name   = "trip-me-up"
@@ -170,4 +176,12 @@ path = "~/bootstrap"
 
 [[repo]]
 name    = "controcanto"
+private = true
+
+[[repo]]
+name    = "genealogy-gramps-fn"
+private = true
+
+[[repo]]
+name    = "house-renderer"
 private = true
