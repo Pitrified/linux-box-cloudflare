@@ -158,6 +158,9 @@ name = "show-epub"
 name    = "epub-fixer"
 private = true
 
+[[repo]]
+name = "klide"
+
 # ---------------------------------------------------------------------------
 # Home-folder repos - plain repos cloned into ~ instead of base_path
 # ---------------------------------------------------------------------------

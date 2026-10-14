@@ -59,10 +59,12 @@ echo ""
 echo "=== nginx ==="
 deploy "$REPO/configs/nginx/hub" /etc/nginx/sites-available/hub
 deploy "$REPO/configs/nginx/cc-kb" /etc/nginx/sites-available/cc-kb
-# sites-enabled is a plain symlink into sites-available (hub was linked by hand;
-# doing it here keeps a fresh box complete)
-ln -sfn /etc/nginx/sites-available/cc-kb /etc/nginx/sites-enabled/cc-kb
-echo "  enabled  /etc/nginx/sites-enabled/cc-kb"
+# sites-enabled is a plain symlink into sites-available; linking every site here
+# keeps a fresh box complete
+for site in hub cc-kb; do
+    ln -sfn "/etc/nginx/sites-available/$site" "/etc/nginx/sites-enabled/$site"
+    echo "  enabled  /etc/nginx/sites-enabled/$site"
+done
 
 echo ""
 echo "=== sysctl ==="
