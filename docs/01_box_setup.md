@@ -111,15 +111,18 @@ EOF
 sudo sysctl --system
 ```
 
-To disable USB storage on a headless server (reduces physical attack surface):
+Optional: to disable USB storage on a headless server (reduces physical attack surface).
+Skipped on the current box, a laptop you may want to plug a disk into:
 
 ```bash
 echo "install usb-storage /bin/false" | sudo tee /etc/modprobe.d/disable-usb-storage.conf
 ```
 
-**6. Install Fail2ban**
+**6. Install Fail2ban (only with openssh-server)**
 
 Provides automatic IP banning after repeated failed authentication attempts.
+It watches the SSH daemon's log, so it only does something when `openssh-server` is installed and reachable.
+A box reached only through Tailscale SSH has no sshd and no open inbound port: skip this step there.
 
 ```bash
 sudo apt install fail2ban -y
@@ -757,3 +760,14 @@ When a box is retired or replaced by a fresh tunnel, revoke what it held - repoi
 - **Delete stale DNS records** for hostnames the new box does not serve, so they do not dangle at a dead tunnel.
 - **Remove stale backups**: delete the old tunnel's JSON from the password manager or wherever it was backed up.
 - **Wipe the old disk** if the hardware leaves your control.
+
+### Moving the box, same tunnel
+
+To move the serving role to another machine without a new tunnel, move the credentials JSON instead of revoking it. No DNS record changes.
+
+- Build the new box first and bring every backend up on loopback, with no `cloudflared` service yet.
+- **Never run two connectors with the same JSON at once**: Cloudflare spreads traffic across both. Stop and disable `cloudflared` on the old box before starting it on the new one.
+- Move the JSON host to host (over Tailscale), as a temporary user-owned copy that is shredded on both ends after `install -o root -g root -m 600` into `/etc/cloudflared/` on the new box.
+- Start it with `sudo cloudflared service install`, which reads `/etc/cloudflared/config.yml`, and check `journalctl -u cloudflared` for `Registered tunnel connection`.
+- The old box keeps its copy until the new one is verified: that copy is the rollback. Then shred it. It is not revoked server-side, so make sure no other copy exists (backups, password manager).
+- Cloudflare Access applications and HSTS are zone settings and need no change.
