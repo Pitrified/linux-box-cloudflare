@@ -1,7 +1,9 @@
 # repos.toml - repomgr config for the linux-box workspace
 #
-# Usage:
-#   repomgr --config ~/repos/linux-box-cloudflare/configs/repomgr/repos.toml status
+# Usage (--config is a per-command option, after the command name):
+#   repomgr status --config ~/repos/linux-box-cloudflare/configs/repomgr/repos.toml
+# or set REPOMGR_CONFIG to this path (done in ~/.bash_aliases.local) and run
+#   repomgr status
 #
 # state_file is resolved relative to this file's parent directory.
 # Clone URLs are derived from transport/host/owner + each repo's name.
