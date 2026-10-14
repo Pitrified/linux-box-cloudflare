@@ -149,9 +149,13 @@ For visibility, install `lm-sensors`:
 
 ```bash
 sudo apt update && sudo apt install -y lm-sensors
-sudo sensors-detect --auto     # probe hardware, write /etc/modules-load.d
 sensors                        # read temperatures
 ```
+
+`sensors-detect --auto` is skipped on purpose.
+On laptops with an NVIDIA GPU it probes the GPU's USB-C controller over I2C, which does not answer and floods the kernel log with `i2c timeout` errors,
+and the driver it proposes (`coretemp`) loads on its own anyway.
+Run it only on a box where `sensors` shows nothing useful without it.
 
 The kernel also has hard critical trip points that force a shutdown as a last resort,
 so `thermald` + `lm-sensors` covers prevention and visibility.

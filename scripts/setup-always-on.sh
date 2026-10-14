@@ -46,7 +46,11 @@ if command -v sensors >/dev/null 2>&1; then
     echo "  lm-sensors already installed"
 else
     sudo apt update && sudo apt install -y lm-sensors
-    sudo sensors-detect --auto
+    # sensors-detect is off by default: on NVIDIA laptops it probes the GPU's USB-C
+    # controller over I2C, which floods the kernel log with timeouts, and the drivers
+    # it proposes (coretemp) load on their own anyway. Uncomment on boxes where
+    # `sensors` shows nothing useful without it.
+    # sudo sensors-detect --auto
 fi
 
 echo ""
