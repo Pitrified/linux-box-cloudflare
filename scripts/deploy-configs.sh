@@ -65,6 +65,12 @@ for site in hub cc-kb; do
     ln -sfn "/etc/nginx/sites-available/$site" "/etc/nginx/sites-enabled/$site"
     echo "  enabled  /etc/nginx/sites-enabled/$site"
 done
+# the package's default site listens on :80 on every interface; every tracked
+# site binds loopback only, so it has no reason to exist
+if [ -e /etc/nginx/sites-enabled/default ] || [ -L /etc/nginx/sites-enabled/default ]; then
+    rm -f /etc/nginx/sites-enabled/default
+    echo "  removed  /etc/nginx/sites-enabled/default"
+fi
 
 echo ""
 echo "=== sysctl ==="

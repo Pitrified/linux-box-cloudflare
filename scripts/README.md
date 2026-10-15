@@ -20,6 +20,21 @@ bash scripts/setup-always-on.sh
 Battery behaviour is left at OS defaults (suspend on idle / low battery); only the AC case
 is changed.
 
+## setup-toolchains.sh
+
+Installs Flutter stable, the Android SDK, the emulator and the `fala_api36` AVD under the
+user's home, and adds their PATH block to `~/.bashrc` above the interactivity guard so
+non-interactive shells get it too. Needs the box packages first; see
+[`docs/01_box_setup.md`](../docs/01_box_setup.md), "Box packages and services".
+
+Run as your **normal user**. It needs no sudo.
+
+**Usage:**
+
+```bash
+bash scripts/setup-toolchains.sh
+```
+
 ## deploy-configs.sh
 
 Deploys the tracked config files to `/etc` as root-owned **copies**, showing a diff of
@@ -44,6 +59,7 @@ sudo bash scripts/deploy-configs.sh
 | `/etc/nginx/sites-available/hub` | `configs/nginx/hub` | copy (root:root 644) |
 | `/etc/sysctl.d/99-hardening.conf` | `configs/sysctl/99-hardening.conf` | copy (root:root 644) |
 | `/var/www/hub` | `sites/landing/` | symlink (site content, not config) |
+| `/etc/nginx/sites-enabled/default` | - | removed (it listens on :80 on every interface) |
 
 After deploying, the script validates the cloudflared ingress config and runs `nginx -t`
 (both skipped gracefully if the tool is not installed yet).

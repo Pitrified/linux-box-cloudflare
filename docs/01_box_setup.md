@@ -246,9 +246,13 @@ server {
 
 ```bash
 sudo ln -s /etc/nginx/sites-available/hub /etc/nginx/sites-enabled/hub
+sudo rm /etc/nginx/sites-enabled/default   # the package's site listens on :80 on every interface
 sudo nginx -t          # verify config syntax before restarting
 sudo systemctl restart nginx
 ```
+
+`deploy-configs.sh` does both the linking and the removal.
+Restart rather than reload: a reload keeps the old `:80` sockets open.
 
 Quick local test - should return your HTML:
 
@@ -751,6 +755,50 @@ sudo bash scripts/deploy-configs.sh
 ```
 
 This script resolves the repo root from its own path, deploys all three configs (showing diffs), links `/var/www/hub` to the landing page, and validates each service config.
+
+## Box packages and services
+
+What the box needs beyond the hardening and the tunnel, for the apps it runs.
+Order on a fresh install: the [bootstrap](https://github.com/Pitrified/bootstrap) repo first (`bootstrap.sh`, then `install_basics.sh` before `install_tools.sh`), then this section, then `deploy-configs.sh`.
+
+**1. Packages**
+
+```bash
+sudo apt install -y git-lfs ffmpeg ninja-build openjdk-17-jdk-headless restic nginx \
+  docker.io docker-compose-v2 build-essential util-linux-extra gnome-tweaks \
+  libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev \
+  libfreetype-dev libjpeg-dev libpng-dev libportmidi-dev
+sudo apt install -y --no-install-recommends calibre   # ebook-convert only, not the desktop app's extras
+```
+
+- `build-essential` is what provides `make`, which every repo's Makefile needs.
+- `openjdk-17-jdk-headless`, `ninja-build` and `git-lfs` are for the Flutter and Android toolchain.
+- The SDL, freetype, jpeg, png and portmidi headers are for building pygame from source (the `laife` repo).
+- `restic`, `docker.io` and `docker-compose-v2` run Gramps Web and its backup.
+- `util-linux-extra` carries `newgrp`, which a minimal Ubuntu lacks, to pick up the `docker` group without logging out.
+
+**2. Docker without sudo**
+
+```bash
+sudo usermod -aG docker "$USER"   # takes effect at the next login
+```
+
+Membership of `docker` is root-equivalent on the host: a container with a bind mount of `/etc` can read the root-only tunnel JSON.
+
+**3. Linger**
+
+```bash
+sudo loginctl enable-linger "$USER"
+```
+
+The user's systemd instance then starts at boot and keeps running with nobody logged in.
+Without it, user timers such as the Gramps backup (`gramps-backup.timer`) run only while someone is logged in, and an unattended box stops backing up after a reboot without anything failing.
+Check with `loginctl show-user "$USER" -p Linger`. Undo with `loginctl disable-linger "$USER"`.
+
+**4. Toolchains**
+
+`bash scripts/setup-toolchains.sh` installs Flutter, the Android SDK, the emulator and an AVD, user-level.
+Playwright's browsers are not a box-wide install: they come from the `klide` repo, where Playwright is a dev dependency.
 
 ## Decommissioning a Box or Tunnel
 
