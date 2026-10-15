@@ -196,4 +196,7 @@ sudo rm -f /etc/systemd/logind.conf.d/keep-awake.conf
 sudo systemctl restart systemd-logind
 ```
 
+Restarting `systemd-logind` breaks a running GNOME session: the desktop stops responding and only a text console (`Ctrl+Alt+F3`) is left.
+Run the restart from an SSH session or a text console with nothing open on the desktop, or skip it and reboot instead.
+
 `thermald` and `lm-sensors` are non-invasive and can be left in place.
