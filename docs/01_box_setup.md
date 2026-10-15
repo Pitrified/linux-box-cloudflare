@@ -783,6 +783,10 @@ Membership is root-equivalent on the host: a container with a bind mount of `/et
 Docker commands run with `sudo` instead; the Gramps Makefile already calls `sudo docker compose`.
 To undo an earlier grant: `sudo gpasswd -d "$USER" docker`, then reboot, since open sessions and the lingering user manager keep the group until they restart.
 
+The `lxd` group is the same risk: Ubuntu adds the first user to it at install, and once LXD is installed a member can start a privileged container with the host's `/` mounted.
+Remove the user from it on a fresh install, LXD or not: `sudo gpasswd -d "$USER" lxd`.
+Check with `id "$USER"`: neither `docker` nor `lxd` should be listed.
+
 **3. Linger**
 
 ```bash
