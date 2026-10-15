@@ -765,7 +765,7 @@ Order on a fresh install: the [bootstrap](https://github.com/Pitrified/bootstrap
 
 ```bash
 sudo apt install -y git-lfs ffmpeg ninja-build openjdk-17-jdk-headless restic nginx \
-  docker.io docker-compose-v2 build-essential util-linux-extra gnome-tweaks \
+  docker.io docker-compose-v2 build-essential gnome-tweaks \
   libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev \
   libfreetype-dev libjpeg-dev libpng-dev libportmidi-dev
 sudo apt install -y --no-install-recommends calibre   # ebook-convert only, not the desktop app's extras
@@ -775,15 +775,13 @@ sudo apt install -y --no-install-recommends calibre   # ebook-convert only, not 
 - `openjdk-17-jdk-headless`, `ninja-build` and `git-lfs` are for the Flutter and Android toolchain.
 - The SDL, freetype, jpeg, png and portmidi headers are for building pygame from source (the `laife` repo).
 - `restic`, `docker.io` and `docker-compose-v2` run Gramps Web and its backup.
-- `util-linux-extra` carries `newgrp`, which a minimal Ubuntu lacks, to pick up the `docker` group without logging out.
 
-**2. Docker without sudo**
+**2. Docker through sudo**
 
-```bash
-sudo usermod -aG docker "$USER"   # takes effect at the next login
-```
-
-Membership of `docker` is root-equivalent on the host: a container with a bind mount of `/etc` can read the root-only tunnel JSON.
+Do not add the user to the `docker` group.
+Membership is root-equivalent on the host: a container with a bind mount of `/etc` can read the root-only tunnel JSON, and so can any process running as the user, Claude included.
+Docker commands run with `sudo` instead; the Gramps Makefile already calls `sudo docker compose`.
+To undo an earlier grant: `sudo gpasswd -d "$USER" docker`, then reboot, since open sessions and the lingering user manager keep the group until they restart.
 
 **3. Linger**
 
